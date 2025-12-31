@@ -2,7 +2,7 @@ import DeliveryAssignment from "../models/deliveryAssignment.model.js"
 import Order from "../models/order.model.js"
 import Shop from "../models/shop.model.js"
 import User from "../models/user.model.js"
-import { sendDeliveryOtpSms } from "../utils/mail.js"
+import { sendDeliveryOtpMail } from "../utils/mail.js"
 import RazorPay from "razorpay"
 import dotenv from "dotenv"
 import { count } from "console"
@@ -506,50 +506,48 @@ export const getOrderById = async (req, res) => {
 // }
 export const sendDeliveryOtp = async (req, res) => {
   try {
-    const { orderId, shopOrderId } = req.body
+    const { orderId, shopOrderId } = req.body;
 
+    // 1️⃣ Validate input
     if (!orderId || !shopOrderId) {
-      return res.status(400).json({ message: "Missing order data" })
+      return res.status(400).json({ message: "Missing order data" });
     }
 
-    // Fetch order and populate only necessary fields
-    const order = await Order.findById(orderId).populate("user", "fullName email mobile")
+    // 2️⃣ Fetch order and user email
+    const order = await Order.findById(orderId).populate("user", "fullName email");
     if (!order) {
-      return res.status(404).json({ message: "Order not found" })
+      return res.status(404).json({ message: "Order not found" });
     }
 
-    const shopOrder = order.shopOrders.id(shopOrderId)
+    const shopOrder = order.shopOrders.id(shopOrderId);
     if (!shopOrder) {
-      return res.status(404).json({ message: "Shop order not found" })
+      return res.status(404).json({ message: "Shop order not found" });
     }
 
-    // Generate OTP
-    const otp = Math.floor(1000 + Math.random() * 9000).toString()
-    shopOrder.deliveryOtp = otp
-    shopOrder.otpExpires = Date.now() + 5 * 60 * 1000
-    await order.save()
+    // 3️⃣ Generate OTP
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
 
-    console.log("User mobile before sending OTP:", order.user.mobile)
+    // 4️⃣ Save OTP
+    shopOrder.deliveryOtp = otp;
+    shopOrder.otpExpires = Date.now() + 5 * 60 * 1000; // 5 minutes
+    await order.save();
 
-    // Send SMS safely
-    if (order.user.mobile) {
-      try {
-        await sendDeliveryOtpSms(order.user, otp)
-        console.log("DELIVERY OTP SMS SENT:", otp, "to", order.user.mobile)
-      } catch (smsError) {
-        console.error("Delivery SMS Error:", smsError.message)
-      }
-    } else {
-      console.warn("User mobile missing, skipping SMS OTP")
+    // 5️⃣ Send OTP via Email safely
+    try {
+      await sendDeliveryOtpMail(order.user, otp);
+      console.log("DELIVERY OTP EMAIL SENT:", otp, "to", order.user.email);
+    } catch (mailError) {
+      console.error("Delivery Email Error:", mailError.message);
+      // Email failed, but OTP still valid
     }
 
-    return res.status(200).json({ message: "OTP sent successfully" })
+    return res.status(200).json({ message: "OTP sent successfully via email" });
 
   } catch (error) {
-    console.error("SEND DELIVERY OTP ERROR:", error)
-    return res.status(500).json({ message: "Internal server error" })
+    console.error("SEND DELIVERY OTP ERROR:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
-}
+};
 
 
 
