@@ -2,7 +2,7 @@ import DeliveryAssignment from "../models/deliveryAssignment.model.js"
 import Order from "../models/order.model.js"
 import Shop from "../models/shop.model.js"
 import User from "../models/user.model.js"
-import { sendDeliveryOtpMail } from "../utils/mail.js"
+import { sendDeliveryOtpSms } from "../utils/mail.js"
 import RazorPay from "razorpay"
 import dotenv from "dotenv"
 import { count } from "console"
@@ -533,12 +533,21 @@ export const sendDeliveryOtp = async (req, res) => {
     await order.save()
 
     // 5️⃣ Send OTP email SAFELY (never crash API)
-    try {
-      await sendDeliveryOtpMail(order.user, otp)
-    } catch (mailError) {
-      console.error("Delivery Mail Error:", mailError.message)
-      // email failed, but OTP still valid
-    }
+    // try {
+    //   await sendDeliveryOtpMail(order.user, otp)
+    // } catch (mailError) {
+    //   console.error("Delivery Mail Error:", mailError.message)
+    //   // email failed, but OTP still valid
+    // }
+      // 5️⃣ Send OTP via SMS SAFELY
+try {
+  await sendDeliveryOtpSms(order.user, otp)
+  console.log("DELIVERY OTP SMS SENT:", otp, "to", order.user.mobile)
+} catch (smsError) {
+  console.error("Delivery SMS Error:", smsError.message)
+  // SMS failed, but OTP still valid
+}
+
 
     return res.status(200).json({
       message: "OTP sent successfully"
