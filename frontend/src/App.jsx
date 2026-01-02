@@ -134,8 +134,11 @@ function App() {
   return (
     <Routes>
 
-      {/* PUBLIC ROUTES */}
-      <Route path='/' element={<Landing />} />
+     <Route
+  path="/"
+  element={userData ? <Navigate to="/home" /> : <Landing />}
+/>
+
 
       <Route
         path='/signin'
