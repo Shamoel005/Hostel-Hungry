@@ -1,4 +1,4 @@
-import axios from 'axios';
+/*import axios from 'axios';
 import React, { useState } from 'react'
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
@@ -108,4 +108,218 @@ const [loading,setLoading]=useState(false)
   )
 }
 
-export default ForgotPassword
+export default ForgotPassword*/
+import React, { useState } from "react";
+import { IoIosArrowRoundBack } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
+
+function ForgotPassword() {
+  const navigate = useNavigate();
+
+  // UI STEPS
+  const [step, setStep] = useState(1);
+
+  // FORM STATE
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
+
+  // UI-ONLY handlers (no backend dependency)
+  const handleSendOtp = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setErr("");
+      setStep(2);
+    }, 1200);
+  };
+
+  const handleVerifyOtp = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setErr("");
+      setStep(3);
+    }, 1200);
+  };
+
+  const handleResetPassword = () => {
+    if (newPassword !== confirmPassword) {
+      setErr("Passwords do not match");
+      return;
+    }
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/signin");
+    }, 1200);
+  };
+
+  return (
+    <div className="min-h-screen w-full grid md:grid-cols-2 bg-white">
+
+      {/* LEFT – BRAND PANEL */}
+      <div className="hidden md:flex flex-col justify-center px-16 bg-gradient-to-br from-gray-900 to-gray-700 text-white animate-fade-up">
+        <h1 className="text-4xl font-semibold tracking-tight">
+          Hostel <span className="text-white/70">Hungry</span>
+        </h1>
+
+        <p className="mt-6 text-lg text-white/70 leading-relaxed max-w-md">
+          Forgot your password?  
+          Don’t worry — resetting it is quick and secure.
+        </p>
+
+        <ul className="mt-10 space-y-3 text-white/70 text-sm">
+          <li>✔ Secure OTP verification</li>
+          <li>✔ Fast & simple recovery</li>
+          <li>✔ Back to your account in minutes</li>
+        </ul>
+      </div>
+
+      {/* RIGHT – CARD */}
+      <div className="flex items-center justify-center px-6">
+        <div className="w-full max-w-md animate-fade-up">
+
+          {/* MOBILE LOGO */}
+          <div className="md:hidden text-center mb-10">
+            <h1 className="text-3xl font-semibold tracking-tight">
+              Hostel <span className="text-black/60">Hungry</span>
+            </h1>
+          </div>
+
+          <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
+
+            {/* HEADER */}
+            <div className="flex items-center gap-3 mb-6">
+              <IoIosArrowRoundBack
+                size={28}
+                className="cursor-pointer text-gray-600 hover:text-black"
+                onClick={() => navigate("/signin")}
+              />
+              <h2 className="text-2xl font-semibold text-gray-900">
+                Reset password
+              </h2>
+            </div>
+
+            {/* STEP INDICATOR */}
+            <div className="flex items-center gap-2 mb-6 text-xs text-gray-500">
+              <span className={step >= 1 ? "text-black font-medium" : ""}>
+                Email
+              </span>
+              <span>→</span>
+              <span className={step >= 2 ? "text-black font-medium" : ""}>
+                OTP
+              </span>
+              <span>→</span>
+              <span className={step === 3 ? "text-black font-medium" : ""}>
+                Password
+              </span>
+            </div>
+
+            {/* STEP 1 – EMAIL */}
+            {step === 1 && (
+              <div>
+                <label className="text-sm font-medium text-gray-700">
+                  Email address
+                </label>
+                <input
+                  type="email"
+                  className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:outline-none focus:border-black"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+
+                <button
+                  onClick={handleSendOtp}
+                  disabled={loading}
+                  className="mt-6 w-full rounded-lg bg-black text-white py-2.5 font-medium transition hover:bg-black/90"
+                >
+                  {loading ? <ClipLoader size={18} color="white" /> : "Send OTP"}
+                </button>
+              </div>
+            )}
+
+            {/* STEP 2 – OTP */}
+            {step === 2 && (
+              <div>
+                <label className="text-sm font-medium text-gray-700">
+                  Enter OTP
+                </label>
+                <input
+                  type="text"
+                  className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:outline-none focus:border-black tracking-widest"
+                  placeholder="••••••"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                />
+
+                <button
+                  onClick={handleVerifyOtp}
+                  disabled={loading}
+                  className="mt-6 w-full rounded-lg bg-black text-white py-2.5 font-medium transition hover:bg-black/90"
+                >
+                  {loading ? <ClipLoader size={18} color="white" /> : "Verify OTP"}
+                </button>
+              </div>
+            )}
+
+            {/* STEP 3 – NEW PASSWORD */}
+            {step === 3 && (
+              <div>
+                <label className="text-sm font-medium text-gray-700">
+                  New password
+                </label>
+                <input
+                  type="password"
+                  className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:outline-none focus:border-black"
+                  placeholder="New password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+
+                <label className="text-sm font-medium text-gray-700 mt-4 block">
+                  Confirm password
+                </label>
+                <input
+                  type="password"
+                  className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:outline-none focus:border-black"
+                  placeholder="Confirm password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+
+                <button
+                  onClick={handleResetPassword}
+                  disabled={loading}
+                  className="mt-6 w-full rounded-lg bg-black text-white py-2.5 font-medium transition hover:bg-black/90"
+                >
+                  {loading ? (
+                    <ClipLoader size={18} color="white" />
+                  ) : (
+                    "Reset password"
+                  )}
+                </button>
+              </div>
+            )}
+
+            {/* ERROR */}
+            {err && (
+              <p className="mt-4 text-sm text-red-500 text-center">
+                {err}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default ForgotPassword;
+

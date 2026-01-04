@@ -86,7 +86,7 @@ const Landing = () => {
 <section className="relative h-screen w-full flex items-center justify-center bg-gray-900">
   
   {/* subtle gradient overlay (Apple feel) */}
-  <div className="absolute inset-0 bg-gradient-to-b from-gray-500 to-gray-600"></div>
+  <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-700"></div>
 
   {/* CONTENT */}
   <div className="relative z-10 max-w-4xl mx-auto px-6 text-center animate-fade-up">
@@ -489,105 +489,92 @@ const Landing = () => {
   </div>
 </section>
 {/* ======================================================
-    FOOTER
+    FOOTER (BLACK / WHITE / CLEAN)
    ====================================================== */}
-<footer className="bg-white border-t border-gray-200">
+<footer className="bg-black">
   <div className="max-w-6xl mx-auto px-6 py-20">
 
     {/* TOP CONTENT */}
-    <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 text-sm text-gray-600">
+    <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 text-sm text-white/70">
 
-      {/* BRAND + SOCIAL */}
+      {/* BRAND */}
       <div>
-      <div className="text-xl tracking-tight select-none">
-      <span className="font-semibold text-black">Hostel</span>
-      <span className="font-light text-black/80 ml-1">Hungry</span>
-      </div>
-
-        {/* SOCIAL LINKS */}
-        <div className="mt-6 flex gap-4 text-xl">
-          <a
-            href="#"
-            className="transition hover:scale-110"
-            aria-label="Instagram"
-          >
-            📷
-          </a>
-          <a
-            href="#"
-            className="transition hover:scale-110"
-            aria-label="LinkedIn"
-          >
-            🔗
-          </a>
-          <a
-            href="#"
-            className="transition hover:scale-110"
-            aria-label="GitHub"
-          >
-            🧑‍💻
-          </a>
-          <a
-            href="#"
-            className="transition hover:scale-110"
-            aria-label="Twitter"
-          >
-            ✖️
-          </a>
+        <div className="text-xl tracking-tight select-none">
+          <span className="font-semibold text-white">Hostel</span>
+          <span className="font-light text-white/70 ml-1">Hungry</span>
         </div>
+
+        <p className="mt-6 text-sm text-white/60 max-w-xs">
+          A student-first platform designed to simplify hostel life
+          with food, essentials, and services.
+        </p>
       </div>
 
       {/* PLATFORM */}
       <div>
-        <h4 className="font-medium text-gray-900 mb-4">
+        <h4 className="font-medium text-white mb-4">
           Platform
         </h4>
         <ul className="space-y-2">
-          <li className="hover:text-gray-900 cursor-pointer">Food & Meals</li>
-          <li className="hover:text-gray-900 cursor-pointer">Daily Essentials</li>
-          <li className="hover:text-gray-900 cursor-pointer">Stationery</li>
-          <li className="hover:text-gray-900 cursor-pointer">Hostel Services</li>
+          {["Food & Meals", "Daily Essentials", "Stationery", "Hostel Services"].map(item => (
+            <li
+              key={item}
+              className="cursor-pointer transition hover:text-white"
+            >
+              {item}
+            </li>
+          ))}
         </ul>
       </div>
 
       {/* COMPANY */}
       <div>
-        <h4 className="font-medium text-gray-900 mb-4">
+        <h4 className="font-medium text-white mb-4">
           Company
         </h4>
         <ul className="space-y-2">
-          <li className="hover:text-gray-900 cursor-pointer">About</li>
-          <li className="hover:text-gray-900 cursor-pointer">Careers</li>
-          <li className="hover:text-gray-900 cursor-pointer">Contact</li>
-          <li className="hover:text-gray-900 cursor-pointer">Support</li>
+          {["About", "Careers", "Contact", "Support"].map(item => (
+            <li
+              key={item}
+              className="cursor-pointer transition hover:text-white"
+            >
+              {item}
+            </li>
+          ))}
         </ul>
       </div>
 
       {/* LEGAL */}
       <div>
-        <h4 className="font-medium text-gray-900 mb-4">
+        <h4 className="font-medium text-white mb-4">
           Legal
         </h4>
         <ul className="space-y-2">
-          <li className="hover:text-gray-900 cursor-pointer">Privacy Policy</li>
-          <li className="hover:text-gray-900 cursor-pointer">Terms of Service</li>
-          <li className="hover:text-gray-900 cursor-pointer">Refund Policy</li>
+          {["Privacy Policy", "Terms of Service", "Refund Policy"].map(item => (
+            <li
+              key={item}
+              className="cursor-pointer transition hover:text-white"
+            >
+              {item}
+            </li>
+          ))}
         </ul>
       </div>
 
     </div>
 
     {/* DIVIDER */}
-    <div className="my-12 h-px bg-gray-200"></div>
+    <div className="my-12 h-px bg-white/10"></div>
 
     {/* BOTTOM BAR */}
-    <div className="flex flex-col md:flex-row gap-4 items-center justify-between text-xs text-gray-500">
+    <div className="flex flex-col md:flex-row gap-4 items-center justify-between text-xs text-white/50">
       <p>© 2026 Hostel Hungry. All rights reserved.</p>
       <p>Built for students. Designed with care.</p>
     </div>
 
   </div>
 </footer>
+
 
 
 
