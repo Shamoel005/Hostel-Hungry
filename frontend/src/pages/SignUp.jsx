@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+/*import React, { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
@@ -29,7 +29,7 @@ function SignUp() {
   const [loading, setLoading] = useState(false);
 
   /*  SIGN UP (EMAIL VERIFICATION)  */
-  const handleSignUp = async () => {
+  /*const handleSignUp = async () => {
     if (loading) return;
 
     if (!fullName || !email || !password || !mobile) {
@@ -62,7 +62,7 @@ function SignUp() {
   };
 
   /* GOOGLE AUTH */
-  const handleGoogleAuth = async () => {
+  /*const handleGoogleAuth = async () => {
     if (loading) return;
 
     if (!mobile) {
@@ -112,7 +112,7 @@ function SignUp() {
           Create your account to get started with delicious food deliveries
         </p>
 
-        {/* Full Name */}
+        {/* Full Name }
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-1">
             Full Name
@@ -126,7 +126,7 @@ function SignUp() {
           />
         </div>
 
-        {/* Email */}
+        {/* Email }
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-1">Email</label>
           <input
@@ -138,7 +138,7 @@ function SignUp() {
           />
         </div>
 
-        {/* Mobile */}
+        {/* Mobile }
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-1">
             Mobile
@@ -152,7 +152,7 @@ function SignUp() {
           />
         </div>
 
-        {/* Password */}
+        {/* Password }
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-1">
             Password
@@ -175,7 +175,7 @@ function SignUp() {
           </div>
         </div>
 
-        {/* Role */}
+        {/* Role }
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-1">Role</label>
           <div className="flex gap-2">
@@ -197,7 +197,7 @@ function SignUp() {
           </div>
         </div>
 
-        {/* Sign Up Button */}
+        {/* Sign Up Button }
         <button
           onClick={handleSignUp}
           disabled={loading}
@@ -211,7 +211,7 @@ function SignUp() {
           <p className="text-green-600 text-center mt-3">{success}</p>
         )}
 
-        {/* Google */}
+        {/* Google }
         <button
           disabled={loading}
           onClick={handleGoogleAuth}
@@ -235,7 +235,7 @@ function SignUp() {
 
 export default SignUp;
 
-
+*/
 
 
 
@@ -377,3 +377,277 @@ export default SignUp;
 // }
 
 // export default SignUp
+
+
+import React, { useState } from "react";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { serverUrl } from "../App";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../../firebase";
+import { ClipLoader } from "react-spinners";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../redux/userSlice";
+import { motion } from "framer-motion";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0 },
+};
+
+function SignUp() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [role, setRole] = useState("user");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [err, setErr] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // 🔒 LOGIC SAME
+  const handleSignUp = async () => {
+    if (!fullName || !email || !password || !mobile) {
+      setErr("All fields are required");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const { data } = await axios.post(
+        `${serverUrl}/api/auth/signup`,
+        { fullName, email, password, mobile, role },
+        { withCredentials: true }
+      );
+
+      setErr("");
+      setSuccess(data?.message || "Please verify your email before login");
+      setTimeout(() => navigate("/signin"), 3000);
+    } catch (error) {
+      setSuccess("");
+      setErr(error?.response?.data?.message || "Signup failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleAuth = async () => {
+    if (!mobile) {
+      setErr("Mobile number is required for Google signup");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+
+      const { data } = await axios.post(
+        `${serverUrl}/api/auth/google-auth`,
+        {
+          fullName: result.user.displayName,
+          email: result.user.email,
+          role,
+          mobile,
+        },
+        { withCredentials: true }
+      );
+
+      dispatch(setUserData(data));
+      navigate("/home");
+    } catch {
+      setErr("Google sign-in cancelled or failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen grid md:grid-cols-2">
+
+      {/* LEFT SIDE */}
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={fadeUp}
+        transition={{ duration: 0.6 }}
+        className="hidden md:flex flex-col justify-center px-20
+                   bg-gradient-to-b from-gray-700 to-gray-900 text-white"
+      >
+        <div className="text-xl tracking-tight">
+          <span className="font-semibold">Hostel</span>
+          <span className="font-light text-white/80 ml-1">Hungry</span>
+        </div>
+
+        <h1 className="mt-10 text-4xl font-semibold leading-tight">
+          Create your account,
+          <br /> and get started.
+        </h1>
+
+        <p className="mt-6 text-lg text-white/70 max-w-md">
+          Join thousands of students using Hostel Hungry to manage food,
+          essentials and hostel services effortlessly.
+        </p>
+
+        <p className="mt-10 text-sm text-white/50">
+          Simple • Reliable • Student-first
+        </p>
+      </motion.div>
+
+      {/* RIGHT SIDE */}
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={fadeUp}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="flex items-center justify-center px-6 bg-white"
+      >
+        <div className="w-full max-w-md">
+
+          <h2 className="text-2xl font-semibold text-gray-900">
+            Create account
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Get started with Hostel Hungry
+          </p>
+
+          {/* FULL NAME */}
+          <div className="mt-8">
+            <input
+              type="text"
+              placeholder="Enter your full name"
+              className="w-full rounded-full border border-gray-300
+                         px-5 py-3 text-sm focus:outline-none focus:border-black"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
+          </div>
+
+          {/* EMAIL */}
+          <div className="mt-5">
+            <input
+              type="email"
+              placeholder="Enter your email address"
+              className="w-full rounded-full border border-gray-300
+                         px-5 py-3 text-sm focus:outline-none focus:border-black"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          {/* MOBILE */}
+          <div className="mt-5">
+            <input
+              type="tel"
+              placeholder="Enter your mobile number"
+              className="w-full rounded-full border border-gray-300
+                         px-5 py-3 text-sm focus:outline-none focus:border-black"
+              value={mobile}
+              onChange={(e) => setMobile(e.target.value)}
+            />
+          </div>
+
+          {/* PASSWORD */}
+          <div className="mt-5 relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Create a password"
+              className="w-full rounded-full border border-gray-300
+                         px-5 py-3 pr-12 text-sm focus:outline-none focus:border-black"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="absolute right-4 top-[14px] text-gray-500"
+              onClick={() => setShowPassword((p) => !p)}
+            >
+              {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+            </button>
+          </div>
+
+          {/* ROLE BUTTONS (UI TEXT CHANGED ONLY) */}
+          <div className="mt-6 flex gap-2">
+            <button
+              onClick={() => setRole("user")}
+              className={`flex-1 rounded-full px-4 py-2 text-sm font-medium border
+                ${role === "user"
+                  ? "bg-black text-white border-black"
+                  : "border-gray-300 text-gray-700 hover:border-black"}`}
+            >
+              Student
+            </button>
+
+            <button
+              onClick={() => setRole("owner")}
+              className={`flex-1 rounded-full px-4 py-2 text-sm font-medium border
+                ${role === "owner"
+                  ? "bg-black text-white border-black"
+                  : "border-gray-300 text-gray-700 hover:border-black"}`}
+            >
+              Owner
+            </button>
+
+            <button
+              onClick={() => setRole("deliveryBoy")}
+              className={`flex-1 rounded-full px-4 py-2 text-sm font-medium border
+                ${role === "deliveryBoy"
+                  ? "bg-black text-white border-black"
+                  : "border-gray-300 text-gray-700 hover:border-black"}`}
+            >
+              Delivery Partner
+            </button>
+          </div>
+
+          {/* SIGN UP */}
+          <button
+            onClick={handleSignUp}
+            disabled={loading}
+            className="mt-6 w-full rounded-full border border-black
+                       px-6 py-3 text-sm font-medium
+                       hover:bg-black hover:text-white transition"
+          >
+            {loading ? <ClipLoader size={18} /> : "Create account"}
+          </button>
+
+          {err && <p className="mt-3 text-sm text-red-500">{err}</p>}
+          {success && (
+            <p className="mt-3 text-sm text-green-600">{success}</p>
+          )}
+
+          {/* GOOGLE */}
+          <button
+            onClick={handleGoogleAuth}
+            className="mt-4 w-full rounded-full border border-gray-300
+                       px-6 py-3 text-sm font-medium
+                       flex items-center justify-center gap-2
+                       hover:bg-gray-50 transition"
+          >
+            <FcGoogle size={18} />
+            Continue with Google
+          </button>
+
+          {/* SIGN IN */}
+          <p
+            className="mt-6 text-sm text-center text-gray-600 cursor-pointer"
+            onClick={() => navigate("/signin")}
+          >
+            Already have an account?{" "}
+            <span className="text-black font-medium hover:underline">
+              Sign in
+            </span>
+          </p>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+export default SignUp;
+
