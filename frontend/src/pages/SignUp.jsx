@@ -265,14 +265,12 @@ function SignUp() {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  /* SIGN UP (EMAIL VERIFICATION)  */
   const handleSignUp = async () => {
     if (loading) return;
     if (!fullName || !email || !password || !mobile) {
       setErr("All fields are required");
       return;
     }
-
     try {
       setLoading(true);
       const { data } = await axios.post(
@@ -282,9 +280,7 @@ function SignUp() {
       );
       setErr("");
       setSuccess(data?.message || "Please verify your email before login");
-      setTimeout(() => {
-        navigate("/signin");
-      }, 3000);
+      setTimeout(() => navigate("/signin"), 3000);
     } catch (error) {
       setSuccess("");
       setErr(error?.response?.data?.message || "Signup failed");
@@ -293,30 +289,21 @@ function SignUp() {
     }
   };
 
-  /* GOOGLE AUTH */
   const handleGoogleAuth = async () => {
     if (loading) return;
     if (!mobile) {
       setErr("Mobile number is required for Google signup");
       return;
     }
-
     try {
       setLoading(true);
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
-
       const { data } = await axios.post(
         `${serverUrl}/api/auth/google-auth`,
-        {
-          fullName: result.user.displayName,
-          email: result.user.email,
-          role,
-          mobile,
-        },
+        { fullName: result.user.displayName, email: result.user.email, role, mobile },
         { withCredentials: true }
       );
-
       dispatch(setUserData(data));
       navigate("/home");
     } catch (error) {
@@ -327,160 +314,127 @@ function SignUp() {
   };
 
   return (
-    <div className="min-h-screen flex bg-gray-900">
-      {/* LEFT – BRAND SIDE (Matching SignIn) */}
+    <div className="min-h-screen flex bg-gray-50 lg:bg-gray-900">
+      
+      {/* LEFT SIDE - HIDDEN ON MOBILE, VISIBLE ON DESKTOP */}
       <div className="hidden lg:flex w-1/2 relative items-center justify-center">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-700" />
         <div className="relative z-10 max-w-lg px-10 text-center animate-fade-up">
-          <h1 className="text-5xl font-semibold tracking-tight text-white">
-            Hostel Hungry
-          </h1>
+          <h1 className="text-5xl font-semibold tracking-tight text-white">Hostel Hungry</h1>
           <p className="mt-6 text-lg text-white/70 leading-relaxed">
-            Everything a college student needs — food, essentials,
-            stationery, and hostel services — in one simple experience.
-          </p>
-          <p className="mt-10 text-sm text-white/50">
-            Join thousands of students across campuses
+            Everything a college student needs in one simple experience.
           </p>
         </div>
       </div>
 
-      {/* RIGHT – SIGN UP CARD */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 bg-gray-50 py-12">
-        <div
-          className="w-full max-w-md bg-white rounded-3xl
-                     border border-black/5 shadow-xl p-8
-                     animate-fade-up transition-all duration-300"
-        >
+      {/* RIGHT SIDE - OPTIMIZED FOR MOBILE */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+        <div className="w-full max-w-md bg-white rounded-[2rem] border border-black/5 shadow-2xl p-6 sm:p-10 animate-fade-up">
+          
           {/* BRAND HEADER */}
-          <div className="text-center">
-            <div className="text-xl tracking-tight select-none">
-              <span className="font-semibold text-gray-900">Hostel</span>
+          <div className="text-center mb-8">
+            <div className="text-2xl tracking-tight">
+              <span className="font-bold text-gray-900">Hostel</span>
               <span className="font-light text-gray-600 ml-1">Hungry</span>
             </div>
-            <p className="mt-2 text-sm text-gray-500">
-              Create your account to get started
-            </p>
+            <p className="mt-1 text-sm text-gray-400">Join the student community</p>
           </div>
 
-          <div className="mt-8 space-y-4">
-            {/* FULL NAME */}
-            <div>
-              <label className="text-sm font-medium text-gray-700">Full Name</label>
-              <input
-                type="text"
-                className="mt-1.5 w-full rounded-xl border border-gray-200 px-4 py-2.5 outline-none transition-all duration-200 focus:border-black focus:ring-2 focus:ring-black/10"
-                placeholder="John Doe"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-              />
-            </div>
-
-            {/* EMAIL */}
-            <div>
-              <label className="text-sm font-medium text-gray-700">Email address</label>
-              <input
-                type="email"
-                className="mt-1.5 w-full rounded-xl border border-gray-200 px-4 py-2.5 outline-none transition-all duration-200 focus:border-black focus:ring-2 focus:ring-black/10"
-                placeholder="you@college.edu"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-
-            {/* MOBILE */}
-            <div>
-              <label className="text-sm font-medium text-gray-700">Mobile Number</label>
-              <input
-                type="tel"
-                className="mt-1.5 w-full rounded-xl border border-gray-200 px-4 py-2.5 outline-none transition-all duration-200 focus:border-black focus:ring-2 focus:ring-black/10"
-                placeholder="+91 XXXXX XXXXX"
-                value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
-              />
-            </div>
+          <div className="space-y-4">
+            {/* INPUT FIELDS */}
+            {[
+              { label: "Full Name", value: fullName, setter: setFullName, type: "text", placeholder: "Enter name" },
+              { label: "Email", value: email, setter: setEmail, type: "email", placeholder: "college@edu.in" },
+              { label: "Mobile", value: mobile, setter: setMobile, type: "tel", placeholder: "10-digit number" },
+            ].map((field, idx) => (
+              <div key={idx}>
+                <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">{field.label}</label>
+                <input
+                  type={field.type}
+                  className="mt-1 w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3.5 outline-none focus:bg-white focus:border-black focus:ring-4 focus:ring-black/5 transition-all"
+                  placeholder={field.placeholder}
+                  value={field.value}
+                  onChange={(e) => field.setter(e.target.value)}
+                />
+              </div>
+            ))}
 
             {/* PASSWORD */}
             <div>
-              <label className="text-sm font-medium text-gray-700">Password</label>
-              <div className="relative mt-1.5">
+              <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">Password</label>
+              <div className="relative mt-1">
                 <input
                   type={showPassword ? "text" : "password"}
-                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 pr-12 outline-none transition-all duration-200 focus:border-black focus:ring-2 focus:ring-black/10"
-                  placeholder="Create a password"
+                  className="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3.5 pr-12 outline-none focus:bg-white focus:border-black focus:ring-4 focus:ring-black/5 transition-all"
+                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
                 >
-                  {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+                  {showPassword ? <FaRegEyeSlash size={20}/> : <FaRegEye size={20}/>}
                 </button>
               </div>
             </div>
 
-            {/* ROLE SELECTION */}
+            {/* ROLE PICKER - BIGGER TOUCH TARGETS FOR MOBILE */}
             <div>
-              <label className="text-sm font-medium text-gray-700">Register as</label>
-              <div className="flex gap-2 mt-1.5">
-                {["user", "owner", "deliveryBoy"].map((r) => (
+              <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">I am a...</label>
+              <div className="flex gap-2 mt-1">
+                {["user", "owner", "delivery"].map((r) => (
                   <button
                     key={r}
                     type="button"
-                    onClick={() => setRole(r)}
-                    className={`flex-1 py-2 text-xs font-medium rounded-xl border transition-all duration-200 ${
-                      role === r
-                        ? "bg-black text-white border-black"
-                        : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                    onClick={() => setRole(r === "delivery" ? "deliveryBoy" : r)}
+                    className={`flex-1 py-3 text-xs font-bold rounded-2xl border transition-all ${
+                      (role === r || (role === "deliveryBoy" && r === "delivery"))
+                        ? "bg-black text-white border-black shadow-lg"
+                        : "bg-white text-gray-500 border-gray-100 hover:border-gray-300"
                     }`}
                   >
-                    {r.charAt(0).toUpperCase() + r.slice(1)}
+                    {r.toUpperCase()}
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* SIGN UP BUTTON */}
+          {/* ACTIONS */}
           <button
             onClick={handleSignUp}
             disabled={loading}
-            className="mt-8 w-full rounded-full bg-black text-white py-3 font-medium transition-all duration-200 hover:bg-black/90 active:scale-[0.98] flex justify-center items-center"
+            className="mt-8 w-full rounded-2xl bg-black text-white py-4 font-bold shadow-xl shadow-black/10 active:scale-95 transition-transform flex justify-center items-center"
           >
-            {loading ? <ClipLoader size={18} color="white" /> : "Create Account"}
+            {loading ? <ClipLoader size={20} color="white" /> : "Sign Up Now"}
           </button>
 
-          {/* MESSAGES */}
-          {err && <p className="mt-4 text-sm text-red-500 text-center">* {err}</p>}
-          {success && <p className="mt-4 text-sm text-green-600 text-center">{success}</p>}
+          {err && <p className="mt-4 text-xs text-red-500 text-center font-medium italic">{err}</p>}
+          {success && <p className="mt-4 text-xs text-green-600 text-center font-medium">{success}</p>}
 
-          {/* DIVIDER */}
           <div className="my-6 flex items-center gap-3">
-            <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-xs text-gray-400">OR</span>
-            <div className="flex-1 h-px bg-gray-200" />
+            <div className="flex-1 h-px bg-gray-100" />
+            <span className="text-[10px] font-bold text-gray-300">OR</span>
+            <div className="flex-1 h-px bg-gray-100" />
           </div>
 
-          {/* GOOGLE SIGNUP */}
           <button
             onClick={handleGoogleAuth}
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-3 rounded-full border border-gray-200 py-3 transition-all duration-200 hover:bg-gray-50 active:scale-[0.98]"
+            className="w-full flex items-center justify-center gap-3 rounded-2xl border border-gray-100 py-3.5 hover:bg-gray-50 transition-all active:scale-95"
           >
-            <FcGoogle size={20} />
-            <span className="font-medium text-gray-800">Sign up with Google</span>
+            <FcGoogle size={22} />
+            <span className="font-bold text-gray-700 text-sm">Google Signup</span>
           </button>
 
-          {/* SIGN IN LINK */}
-          <p className="mt-8 text-center text-sm text-gray-600">
-            Already have an account?{" "}
+          <p className="mt-8 text-center text-sm text-gray-500">
+            Already a member?{" "}
             <span
-              className="font-medium text-black cursor-pointer hover:underline"
+              className="font-bold text-black cursor-pointer underline underline-offset-4"
               onClick={() => navigate("/signin")}
             >
-              Sign In
+              Log In
             </span>
           </p>
         </div>
