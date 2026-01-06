@@ -98,7 +98,6 @@ function SignIn() {
 export default SignIn
 */
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
@@ -158,15 +157,11 @@ const SignIn = () => {
   return (
     <div className="min-h-screen flex bg-gray-900">
 
-      {/* LEFT – BRAND SIDE (same as landing hero feel) */}
+      {/* LEFT – BRAND SIDE */}
       <div className="hidden lg:flex w-1/2 relative items-center justify-center">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-700" />
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative z-10 max-w-lg px-10 text-center"
-        >
+
+        <div className="relative z-10 max-w-lg px-10 text-center animate-fade-up">
           <h1 className="text-5xl font-semibold tracking-tight text-white">
             Hostel Hungry
           </h1>
@@ -179,17 +174,15 @@ const SignIn = () => {
           <p className="mt-10 text-sm text-white/50">
             Trusted by students across multiple campuses
           </p>
-        </motion.div>
+        </div>
       </div>
 
       {/* RIGHT – SIGN IN CARD */}
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 bg-gray-50">
-        <motion.div
-          initial={{ opacity: 0, y: 24, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+        <div
           className="w-full max-w-md bg-white rounded-3xl
-                     border border-black/5 shadow-xl p-8"
+                     border border-black/5 shadow-xl p-8
+                     animate-fade-up transition-all duration-300"
         >
 
           {/* BRAND HEADER */}
@@ -212,7 +205,8 @@ const SignIn = () => {
             <input
               type="email"
               className="mt-2 w-full rounded-xl border border-gray-200
-                         px-4 py-3 outline-none transition
+                         px-4 py-3 outline-none
+                         transition-all duration-200
                          focus:border-black focus:ring-2 focus:ring-black/10"
               placeholder="you@college.edu"
               value={email}
@@ -229,7 +223,8 @@ const SignIn = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 className="w-full rounded-xl border border-gray-200
-                           px-4 py-3 pr-12 outline-none transition
+                           px-4 py-3 pr-12 outline-none
+                           transition-all duration-200
                            focus:border-black focus:ring-2 focus:ring-black/10"
                 placeholder="Enter your password"
                 value={password}
@@ -239,7 +234,7 @@ const SignIn = () => {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-1/2 -translate-y-1/2
-                           text-gray-500 hover:text-gray-700"
+                           text-gray-500 hover:text-gray-700 transition"
               >
                 {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
               </button>
@@ -256,27 +251,22 @@ const SignIn = () => {
           </div>
 
           {/* SIGN IN */}
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
+          <button
             onClick={handleSignIn}
             disabled={loading}
             className="mt-6 w-full rounded-full bg-black
                        text-white py-3 font-medium
-                       transition hover:bg-black/90"
+                       transition-all duration-200
+                       hover:bg-black/90 active:scale-[0.98]"
           >
             {loading ? <ClipLoader size={18} color="white" /> : "Sign in"}
-          </motion.button>
+          </button>
 
           {/* ERROR */}
           {err && (
-            <motion.p
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-4 text-sm text-red-500 text-center"
-            >
+            <p className="mt-4 text-sm text-red-500 text-center animate-fade-up">
               * {err}
-            </motion.p>
+            </p>
           )}
 
           {/* DIVIDER */}
@@ -287,19 +277,18 @@ const SignIn = () => {
           </div>
 
           {/* GOOGLE */}
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
+          <button
             onClick={handleGoogleAuth}
             className="w-full flex items-center justify-center gap-3
                        rounded-full border border-gray-200 py-3
-                       transition hover:bg-gray-50"
+                       transition-all duration-200
+                       hover:bg-gray-50 active:scale-[0.98]"
           >
             <FcGoogle size={20} />
             <span className="font-medium text-gray-800">
               Continue with Google
             </span>
-          </motion.button>
+          </button>
 
           {/* SIGN UP */}
           <p className="mt-8 text-center text-sm text-gray-600">
@@ -311,7 +300,7 @@ const SignIn = () => {
               Create an account
             </span>
           </p>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
