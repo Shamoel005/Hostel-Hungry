@@ -98,6 +98,7 @@ function SignIn() {
 export default SignIn
 */
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
@@ -119,7 +120,6 @@ const SignIn = () => {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
 
-  /* ================= SIGN IN ================= */
   const handleSignIn = async () => {
     setLoading(true);
     try {
@@ -129,16 +129,14 @@ const SignIn = () => {
         { withCredentials: true }
       );
       dispatch(setUserData(data));
-      setErr("");
       navigate("/");
     } catch (error) {
-      setErr(error?.response?.data?.message || "Signin failed");
+      setErr(error?.response?.data?.message || "Unable to sign in");
     } finally {
       setLoading(false);
     }
   };
 
-  /* ================= GOOGLE AUTH ================= */
   const handleGoogleAuth = async () => {
     try {
       const provider = new GoogleAuthProvider();
@@ -158,40 +156,65 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-black text-white">
+    <div className="min-h-screen flex bg-gray-900">
 
-      {/* ================= LEFT (BRAND / HERO) ================= */}
-      <div className="hidden lg:flex w-1/2 relative items-center justify-center bg-gradient-to-b from-gray-900 to-black">
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 max-w-lg text-center animate-fade-up">
-          <h1 className="text-5xl font-semibold tracking-tight">
+      {/* LEFT – BRAND SIDE (same as landing hero feel) */}
+      <div className="hidden lg:flex w-1/2 relative items-center justify-center">
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-700" />
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="relative z-10 max-w-lg px-10 text-center"
+        >
+          <h1 className="text-5xl font-semibold tracking-tight text-white">
             Hostel Hungry
           </h1>
-          <p className="mt-6 text-lg text-white/70">
-            One account. All your food, essentials, and hostel services —
-            delivered simply.
+
+          <p className="mt-6 text-lg text-white/70 leading-relaxed">
+            Everything a college student needs — food, essentials,
+            stationery, and hostel services — in one simple experience.
           </p>
-        </div>
+
+          <p className="mt-10 text-sm text-white/50">
+            Trusted by students across multiple campuses
+          </p>
+        </motion.div>
       </div>
 
-      {/* ================= RIGHT (SIGN IN CARD) ================= */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-6">
-        <div className="w-full max-w-md bg-white text-gray-900 rounded-3xl p-8 shadow-xl border border-gray-200 animate-fade-up">
+      {/* RIGHT – SIGN IN CARD */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 bg-gray-50">
+        <motion.div
+          initial={{ opacity: 0, y: 24, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="w-full max-w-md bg-white rounded-3xl
+                     border border-black/5 shadow-xl p-8"
+        >
 
-          <h2 className="text-3xl font-semibold tracking-tight">
-            Sign in
-          </h2>
-          <p className="mt-2 text-gray-500">
-            Welcome back. Continue your hostel journey.
-          </p>
+          {/* BRAND HEADER */}
+          <div className="text-center">
+            <div className="text-xl tracking-tight select-none">
+              <span className="font-semibold text-gray-900">Hostel</span>
+              <span className="font-light text-gray-600 ml-1">Hungry</span>
+            </div>
+
+            <p className="mt-2 text-sm text-gray-500">
+              Sign in to manage your hostel life
+            </p>
+          </div>
 
           {/* EMAIL */}
           <div className="mt-8">
-            <label className="text-sm font-medium">Email</label>
+            <label className="text-sm font-medium text-gray-700">
+              Email address
+            </label>
             <input
               type="email"
-              className="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-black"
-              placeholder="you@example.com"
+              className="mt-2 w-full rounded-xl border border-gray-200
+                         px-4 py-3 outline-none transition
+                         focus:border-black focus:ring-2 focus:ring-black/10"
+              placeholder="you@college.edu"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -199,18 +222,24 @@ const SignIn = () => {
 
           {/* PASSWORD */}
           <div className="mt-5">
-            <label className="text-sm font-medium">Password</label>
+            <label className="text-sm font-medium text-gray-700">
+              Password
+            </label>
             <div className="relative mt-2">
               <input
                 type={showPassword ? "text" : "password"}
-                className="w-full rounded-xl border px-4 py-3 pr-12 outline-none focus:ring-2 focus:ring-black"
-                placeholder="Enter password"
+                className="w-full rounded-xl border border-gray-200
+                           px-4 py-3 pr-12 outline-none transition
+                           focus:border-black focus:ring-2 focus:ring-black/10"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
               <button
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+                type="button"
                 onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2
+                           text-gray-500 hover:text-gray-700"
               >
                 {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
               </button>
@@ -219,25 +248,35 @@ const SignIn = () => {
 
           {/* FORGOT */}
           <div
-            className="mt-4 text-sm text-right text-black/70 cursor-pointer hover:underline"
+            className="mt-4 text-right text-sm text-gray-600
+                       cursor-pointer hover:underline"
             onClick={() => navigate("/forgot-password")}
           >
             Forgot password?
           </div>
 
-          {/* SIGN IN BUTTON */}
-          <button
+          {/* SIGN IN */}
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
             onClick={handleSignIn}
             disabled={loading}
-            className="mt-6 w-full rounded-full bg-black text-white py-3 font-medium transition hover:bg-black/90"
+            className="mt-6 w-full rounded-full bg-black
+                       text-white py-3 font-medium
+                       transition hover:bg-black/90"
           >
             {loading ? <ClipLoader size={18} color="white" /> : "Sign in"}
-          </button>
+          </motion.button>
 
+          {/* ERROR */}
           {err && (
-            <p className="text-red-500 text-sm text-center mt-4">
+            <motion.p
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-4 text-sm text-red-500 text-center"
+            >
               * {err}
-            </p>
+            </motion.p>
           )}
 
           {/* DIVIDER */}
@@ -248,31 +287,38 @@ const SignIn = () => {
           </div>
 
           {/* GOOGLE */}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
             onClick={handleGoogleAuth}
-            className="w-full flex items-center justify-center gap-3 rounded-full border py-3 transition hover:bg-gray-50"
+            className="w-full flex items-center justify-center gap-3
+                       rounded-full border border-gray-200 py-3
+                       transition hover:bg-gray-50"
           >
             <FcGoogle size={20} />
-            <span className="font-medium">Sign in with Google</span>
-          </button>
+            <span className="font-medium text-gray-800">
+              Continue with Google
+            </span>
+          </motion.button>
 
           {/* SIGN UP */}
           <p className="mt-8 text-center text-sm text-gray-600">
-            Don’t have an account?{" "}
+            New to Hostel Hungry?{" "}
             <span
-              className="text-black font-medium cursor-pointer hover:underline"
+              className="font-medium text-black cursor-pointer hover:underline"
               onClick={() => navigate("/signup")}
             >
-              Create one
+              Create an account
             </span>
           </p>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
 };
 
 export default SignIn;
+
 
 
 
