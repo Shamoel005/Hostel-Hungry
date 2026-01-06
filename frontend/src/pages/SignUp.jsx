@@ -378,7 +378,6 @@ export default SignUp;
 
 // export default SignUp
 
-
 import React, { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
@@ -392,9 +391,14 @@ import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
 import { motion } from "framer-motion";
 
+/* ================= ANIMATION ================= */
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
 };
 
 function SignUp() {
@@ -411,7 +415,7 @@ function SignUp() {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 🔒 LOGIC SAME
+  // 🔒 LOGIC UNCHANGED
   const handleSignUp = async () => {
     if (!fullName || !email || !password || !mobile) {
       setErr("All fields are required");
@@ -471,18 +475,17 @@ function SignUp() {
   return (
     <div className="min-h-screen grid md:grid-cols-2">
 
-      {/* LEFT SIDE */}
+      {/* ================= LEFT PANEL ================= */}
       <motion.div
+        variants={fadeUp}
         initial="hidden"
         animate="visible"
-        variants={fadeUp}
-        transition={{ duration: 0.6 }}
         className="hidden md:flex flex-col justify-center px-20
                    bg-gradient-to-b from-gray-700 to-gray-900 text-white"
       >
-        <div className="text-xl tracking-tight">
+        <div className="text-xl tracking-tight select-none">
           <span className="font-semibold">Hostel</span>
-          <span className="font-light text-white/80 ml-1">Hungry</span>
+          <span className="font-light ml-1 text-white/80">Hungry</span>
         </div>
 
         <h1 className="mt-10 text-4xl font-semibold leading-tight">
@@ -500,12 +503,11 @@ function SignUp() {
         </p>
       </motion.div>
 
-      {/* RIGHT SIDE */}
+      {/* ================= RIGHT PANEL ================= */}
       <motion.div
+        variants={fadeUp}
         initial="hidden"
         animate="visible"
-        variants={fadeUp}
-        transition={{ duration: 0.6, delay: 0.1 }}
         className="flex items-center justify-center px-6 bg-white"
       >
         <div className="w-full max-w-md">
@@ -517,49 +519,44 @@ function SignUp() {
             Get started with Hostel Hungry
           </p>
 
-          {/* FULL NAME */}
-          <div className="mt-8">
-            <input
-              type="text"
-              placeholder="Enter your full name"
-              className="w-full rounded-full border border-gray-300
-                         px-5 py-3 text-sm focus:outline-none focus:border-black"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+          {/* INPUTS */}
+          {[{
+            type: "text",
+            value: fullName,
+            onChange: setFullName,
+            placeholder: "Enter your full name",
+          },{
+            type: "email",
+            value: email,
+            onChange: setEmail,
+            placeholder: "Enter your email address",
+          },{
+            type: "tel",
+            value: mobile,
+            onChange: setMobile,
+            placeholder: "Enter your mobile number",
+          }].map((field, i) => (
+            <motion.input
+              key={i}
+              type={field.type}
+              value={field.value}
+              onChange={(e) => field.onChange(e.target.value)}
+              placeholder={field.placeholder}
+              whileFocus={{ scale: 1.01 }}
+              className="mt-5 w-full rounded-full border border-gray-300
+                         px-5 py-3 text-sm transition
+                         focus:outline-none focus:border-black"
             />
-          </div>
-
-          {/* EMAIL */}
-          <div className="mt-5">
-            <input
-              type="email"
-              placeholder="Enter your email address"
-              className="w-full rounded-full border border-gray-300
-                         px-5 py-3 text-sm focus:outline-none focus:border-black"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-
-          {/* MOBILE */}
-          <div className="mt-5">
-            <input
-              type="tel"
-              placeholder="Enter your mobile number"
-              className="w-full rounded-full border border-gray-300
-                         px-5 py-3 text-sm focus:outline-none focus:border-black"
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
-            />
-          </div>
+          ))}
 
           {/* PASSWORD */}
-          <div className="mt-5 relative">
+          <motion.div className="mt-5 relative" whileFocus={{ scale: 1.01 }}>
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Create a password"
               className="w-full rounded-full border border-gray-300
-                         px-5 py-3 pr-12 text-sm focus:outline-none focus:border-black"
+                         px-5 py-3 pr-12 text-sm
+                         focus:outline-none focus:border-black"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -570,43 +567,33 @@ function SignUp() {
             >
               {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
             </button>
-          </div>
+          </motion.div>
 
-          {/* ROLE BUTTONS (UI TEXT CHANGED ONLY) */}
+          {/* ROLE */}
           <div className="mt-6 flex gap-2">
-            <button
-              onClick={() => setRole("user")}
-              className={`flex-1 rounded-full px-4 py-2 text-sm font-medium border
-                ${role === "user"
-                  ? "bg-black text-white border-black"
-                  : "border-gray-300 text-gray-700 hover:border-black"}`}
-            >
-              Student
-            </button>
-
-            <button
-              onClick={() => setRole("owner")}
-              className={`flex-1 rounded-full px-4 py-2 text-sm font-medium border
-                ${role === "owner"
-                  ? "bg-black text-white border-black"
-                  : "border-gray-300 text-gray-700 hover:border-black"}`}
-            >
-              Owner
-            </button>
-
-            <button
-              onClick={() => setRole("deliveryBoy")}
-              className={`flex-1 rounded-full px-4 py-2 text-sm font-medium border
-                ${role === "deliveryBoy"
-                  ? "bg-black text-white border-black"
-                  : "border-gray-300 text-gray-700 hover:border-black"}`}
-            >
-              Delivery Partner
-            </button>
+            {[
+              { label: "Student", value: "user" },
+              { label: "Owner", value: "owner" },
+              { label: "Delivery Partner", value: "deliveryBoy" },
+            ].map((r) => (
+              <motion.button
+                key={r.value}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setRole(r.value)}
+                className={`flex-1 rounded-full px-4 py-2 text-sm font-medium border
+                  ${role === r.value
+                    ? "bg-black text-white border-black"
+                    : "border-gray-300 text-gray-700 hover:border-black"}`}
+              >
+                {r.label}
+              </motion.button>
+            ))}
           </div>
 
           {/* SIGN UP */}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={handleSignUp}
             disabled={loading}
             className="mt-6 w-full rounded-full border border-black
@@ -614,15 +601,25 @@ function SignUp() {
                        hover:bg-black hover:text-white transition"
           >
             {loading ? <ClipLoader size={18} /> : "Create account"}
-          </button>
+          </motion.button>
 
-          {err && <p className="mt-3 text-sm text-red-500">{err}</p>}
+          {/* STATUS */}
+          {err && (
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              className="mt-3 text-sm text-red-500">
+              {err}
+            </motion.p>
+          )}
           {success && (
-            <p className="mt-3 text-sm text-green-600">{success}</p>
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              className="mt-3 text-sm text-green-600">
+              {success}
+            </motion.p>
           )}
 
           {/* GOOGLE */}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
             onClick={handleGoogleAuth}
             className="mt-4 w-full rounded-full border border-gray-300
                        px-6 py-3 text-sm font-medium
@@ -631,7 +628,7 @@ function SignUp() {
           >
             <FcGoogle size={18} />
             Continue with Google
-          </button>
+          </motion.button>
 
           {/* SIGN IN */}
           <p
@@ -643,12 +640,12 @@ function SignUp() {
               Sign in
             </span>
           </p>
+
         </div>
       </motion.div>
     </div>
   );
 }
-
 
 export default SignUp;
 

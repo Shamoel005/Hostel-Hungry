@@ -115,11 +115,17 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { serverUrl } from "../App";
 import { ClipLoader } from "react-spinners";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
+/* ================= ANIMATION ================= */
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+  exit: { opacity: 0, y: -12 },
 };
 
 function ForgotPassword() {
@@ -192,16 +198,15 @@ function ForgotPassword() {
   return (
     <div className="min-h-screen grid md:grid-cols-2">
 
-      {/* ================= LEFT GREY PANEL ================= */}
+      {/* ================= LEFT PANEL ================= */}
       <motion.div
+        variants={fadeUp}
         initial="hidden"
         animate="visible"
-        variants={fadeUp}
-        transition={{ duration: 0.6 }}
         className="hidden md:flex flex-col justify-center px-20
                    bg-gradient-to-b from-gray-700 to-gray-900 text-white"
       >
-        <div className="text-xl tracking-tight">
+        <div className="text-xl tracking-tight select-none">
           <span className="font-semibold">Hostel</span>
           <span className="font-light text-white/80 ml-1">Hungry</span>
         </div>
@@ -223,10 +228,9 @@ function ForgotPassword() {
 
       {/* ================= RIGHT FORM ================= */}
       <motion.div
+        variants={fadeUp}
         initial="hidden"
         animate="visible"
-        variants={fadeUp}
-        transition={{ duration: 0.6, delay: 0.1 }}
         className="flex items-center justify-center px-6 bg-white"
       >
         <div className="w-full max-w-md">
@@ -249,106 +253,135 @@ function ForgotPassword() {
             {step === 3 && "Create a new password"}
           </p>
 
-          {/* STEP 1 */}
-          {step === 1 && (
-            <>
-              <div className="mt-8">
-                <input
+          {/* ================= STEPS ================= */}
+          <AnimatePresence mode="wait">
+
+            {/* STEP 1 */}
+            {step === 1 && (
+              <motion.div
+                key="step1"
+                variants={fadeUp}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+              >
+                <motion.input
+                  whileFocus={{ scale: 1.01 }}
                   type="email"
                   placeholder="Enter your email address"
-                  className="w-full rounded-full border border-gray-300
+                  className="mt-8 w-full rounded-full border border-gray-300
                              px-5 py-3 text-sm focus:outline-none focus:border-black"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-              </div>
 
-              <button
-                onClick={handleSendOtp}
-                disabled={loading}
-                className="mt-6 w-full rounded-full border border-black
-                           px-6 py-3 text-sm font-medium
-                           hover:bg-black hover:text-white transition"
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleSendOtp}
+                  disabled={loading}
+                  className="mt-6 w-full rounded-full border border-black
+                             px-6 py-3 text-sm font-medium
+                             hover:bg-black hover:text-white transition"
+                >
+                  {loading ? <ClipLoader size={18} /> : "Send OTP"}
+                </motion.button>
+              </motion.div>
+            )}
+
+            {/* STEP 2 */}
+            {step === 2 && (
+              <motion.div
+                key="step2"
+                variants={fadeUp}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
               >
-                {loading ? <ClipLoader size={18} /> : "Send OTP"}
-              </button>
-            </>
-          )}
-
-          {/* STEP 2 */}
-          {step === 2 && (
-            <>
-              <div className="mt-8">
-                <input
+                <motion.input
+                  whileFocus={{ scale: 1.01 }}
                   type="text"
                   placeholder="Enter OTP"
-                  className="w-full rounded-full border border-gray-300
+                  className="mt-8 w-full rounded-full border border-gray-300
                              px-5 py-3 text-sm focus:outline-none focus:border-black"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
                 />
-              </div>
 
-              <button
-                onClick={handleVerifyOtp}
-                disabled={loading}
-                className="mt-6 w-full rounded-full border border-black
-                           px-6 py-3 text-sm font-medium
-                           hover:bg-black hover:text-white transition"
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleVerifyOtp}
+                  disabled={loading}
+                  className="mt-6 w-full rounded-full border border-black
+                             px-6 py-3 text-sm font-medium
+                             hover:bg-black hover:text-white transition"
+                >
+                  {loading ? <ClipLoader size={18} /> : "Verify OTP"}
+                </motion.button>
+              </motion.div>
+            )}
+
+            {/* STEP 3 */}
+            {step === 3 && (
+              <motion.div
+                key="step3"
+                variants={fadeUp}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
               >
-                {loading ? <ClipLoader size={18} /> : "Verify OTP"}
-              </button>
-            </>
-          )}
-
-          {/* STEP 3 */}
-          {step === 3 && (
-            <>
-              <div className="mt-8">
-                <input
+                <motion.input
+                  whileFocus={{ scale: 1.01 }}
                   type="password"
                   placeholder="Create new password"
-                  className="w-full rounded-full border border-gray-300
+                  className="mt-8 w-full rounded-full border border-gray-300
                              px-5 py-3 text-sm focus:outline-none focus:border-black"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                 />
-              </div>
 
-              <div className="mt-4">
-                <input
+                <motion.input
+                  whileFocus={{ scale: 1.01 }}
                   type="password"
                   placeholder="Confirm new password"
-                  className="w-full rounded-full border border-gray-300
+                  className="mt-4 w-full rounded-full border border-gray-300
                              px-5 py-3 text-sm focus:outline-none focus:border-black"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
-              </div>
 
-              <button
-                onClick={handleResetPassword}
-                disabled={loading}
-                className="mt-6 w-full rounded-full border border-black
-                           px-6 py-3 text-sm font-medium
-                           hover:bg-black hover:text-white transition"
-              >
-                {loading ? <ClipLoader size={18} /> : "Reset password"}
-              </button>
-            </>
-          )}
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleResetPassword}
+                  disabled={loading}
+                  className="mt-6 w-full rounded-full border border-black
+                             px-6 py-3 text-sm font-medium
+                             hover:bg-black hover:text-white transition"
+                >
+                  {loading ? <ClipLoader size={18} /> : "Reset password"}
+                </motion.button>
+              </motion.div>
+            )}
 
+          </AnimatePresence>
+
+          {/* ERROR */}
           {err && (
-            <p className="mt-4 text-sm text-red-500 text-center">
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mt-4 text-sm text-red-500 text-center"
+            >
               {err}
-            </p>
+            </motion.p>
           )}
         </div>
       </motion.div>
     </div>
   );
 }
-
 
 export default ForgotPassword;
 

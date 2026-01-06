@@ -111,9 +111,14 @@ import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
 import { motion } from "framer-motion";
 
+/* ================= ANIMATION ================= */
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
 };
 
 const SignIn = () => {
@@ -138,7 +143,7 @@ const SignIn = () => {
       dispatch(setUserData(result.data));
       setErr("");
     } catch (error) {
-      setErr(error?.response?.data?.message);
+      setErr(error?.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -162,46 +167,40 @@ const SignIn = () => {
   return (
     <div className="min-h-screen grid md:grid-cols-2">
 
-      {/* ================= LEFT SIDE (GREY LANDING PANEL) ================= */}
+      {/* ================= LEFT PANEL ================= */}
       <motion.div
+        variants={fadeUp}
         initial="hidden"
         animate="visible"
-        variants={fadeUp}
-        transition={{ duration: 0.6, ease: "easeOut" }}
         className="hidden md:flex flex-col justify-center px-20
                    bg-gradient-to-b from-gray-700 to-gray-900 text-white"
       >
-        {/* LOGO */}
         <div className="text-xl tracking-tight select-none">
-          <span className="font-semibold text-white">Hostel</span>
-          <span className="font-light text-white/80 ml-1">Hungry</span>
+          <span className="font-semibold">Hostel</span>
+          <span className="font-light ml-1 text-white/80">Hungry</span>
         </div>
 
-        {/* HEADING */}
-        <h1 className="mt-10 text-4xl font-semibold tracking-tight leading-tight text-white">
+        <h1 className="mt-10 text-4xl font-semibold leading-tight">
           Everything a student needs,
           <br />
           in one simple platform.
         </h1>
 
-        {/* DESCRIPTION */}
         <p className="mt-6 text-lg text-white/70 max-w-md">
           Manage food, daily essentials, stationery, groceries and hostel
           services from a single, reliable account designed for campus life.
         </p>
 
-        {/* FOOTER TEXT */}
         <p className="mt-10 text-sm text-white/50">
           Trusted by students across multiple campuses
         </p>
       </motion.div>
 
-      {/* ================= RIGHT SIDE (SIGN IN) ================= */}
+      {/* ================= RIGHT PANEL ================= */}
       <motion.div
+        variants={fadeUp}
         initial="hidden"
         animate="visible"
-        variants={fadeUp}
-        transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
         className="flex items-center justify-center px-6 bg-white"
       >
         <div className="w-full max-w-md">
@@ -214,23 +213,23 @@ const SignIn = () => {
           </p>
 
           {/* EMAIL */}
-          <div className="mt-8">
+          <motion.div className="mt-8" whileFocus={{ scale: 1.01 }}>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email
             </label>
             <input
               type="email"
               className="w-full rounded-full border border-gray-300
-                         px-5 py-3 text-sm
+                         px-5 py-3 text-sm transition
                          focus:outline-none focus:border-black"
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-          </div>
+          </motion.div>
 
           {/* PASSWORD */}
-          <div className="mt-5">
+          <motion.div className="mt-5" whileFocus={{ scale: 1.01 }}>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
@@ -238,7 +237,7 @@ const SignIn = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 className="w-full rounded-full border border-gray-300
-                           px-5 py-3 pr-12 text-sm
+                           px-5 py-3 pr-12 text-sm transition
                            focus:outline-none focus:border-black"
                 placeholder="••••••••"
                 value={password}
@@ -252,9 +251,9 @@ const SignIn = () => {
                 {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
               </button>
             </div>
-          </div>
+          </motion.div>
 
-          {/* FORGOT PASSWORD */}
+          {/* FORGOT */}
           <div
             className="mt-3 text-right text-sm text-gray-600
                        hover:text-black cursor-pointer"
@@ -263,39 +262,46 @@ const SignIn = () => {
             Forgot password?
           </div>
 
-          {/* SIGN IN BUTTON */}
-          <button
+          {/* SIGN IN */}
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={handleSignIn}
             disabled={loading}
             className="mt-6 w-full rounded-full
                        border border-black
                        px-6 py-3 text-sm font-medium
-                       transition-all duration-300
-                       hover:bg-black hover:text-white"
+                       transition hover:bg-black hover:text-white"
           >
             {loading ? <ClipLoader size={18} /> : "Sign in"}
-          </button>
+          </motion.button>
 
+          {/* ERROR */}
           {err && (
-            <p className="mt-3 text-sm text-red-500">
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mt-3 text-sm text-red-500"
+            >
               {err}
-            </p>
+            </motion.p>
           )}
 
           {/* GOOGLE */}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
             onClick={handleGoogleAuth}
             className="mt-4 w-full rounded-full
                        border border-gray-300
                        px-6 py-3 text-sm font-medium
                        flex items-center justify-center gap-2
-                       transition hover:bg-gray-50"
+                       hover:bg-gray-50 transition"
           >
             <FcGoogle size={18} />
             Continue with Google
-          </button>
+          </motion.button>
 
-          {/* CREATE ACCOUNT (CENTER) */}
+          {/* SIGN UP */}
           <p
             className="mt-6 text-sm text-center text-gray-600 cursor-pointer"
             onClick={() => navigate("/signup")}
@@ -312,8 +318,8 @@ const SignIn = () => {
   );
 };
 
-
 export default SignIn;
+
 
 
 
