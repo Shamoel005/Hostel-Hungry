@@ -79,17 +79,16 @@ html {
 
 
 
-
 @import "tailwindcss";
 
-/* 1. GLOBAL SCROLLBAR HIDE & TYPOGRAPHY */
+/* 1. RESET & BASE */
 * {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 ::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
 }
 
 body {
@@ -97,82 +96,52 @@ body {
     "Helvetica Neue", Helvetica, Arial, sans-serif;
   background-color: #ffffff;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-/* 2. ANIMATIONS (Entrance, Errors & Feedback) */
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* 2. PREMIUM HOVER EFFECTS (Forcefully applied for Production) */
+.hover-lift {
+  transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), 
+              box-shadow 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+  will-change: transform;
 }
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+.hover-lift:hover {
+  transform: translateY(-15px) scale(1.02) !important;
+  box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.12) !important;
+  z-index: 20;
 }
 
+/* 3. SCROLL REVEAL ANIMATION */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none; /* Disable pointer events while hidden to prevent hover issues */
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto; /* Enable pointer events when visible */
+}
+
+/* 4. KEYFRAMES & UTILITIES */
 @keyframes pulse {
-  0%, 100% { 
-    opacity: 0.4; 
-    transform: scale(1); 
-  }
-  50% { 
-    opacity: 1; 
-    transform: scale(1.2); 
-  }
-}
-
-/* Premium easing functions use kiye hain for Apple-like feel */
-.animate-fade-up {
-  animation: fadeUp 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-
-.animate-shake {
-  animation: shake 0.3s ease-in-out;
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
 }
 
 .animate-pulse {
   animation: pulse 2s infinite ease-in-out;
 }
 
-/* 3. CARD HOVER EFFECTS */
-.hover-lift {
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
-}
-
-.hover-lift:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-}
-
-/* 4. SCROLL REVEAL (For JS Intersection Observer) */
-.reveal {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform, opacity;
-}
-
-.reveal-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* 5. INPUT FOCUS UTILITY */
-input:focus {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.animate-pulse {
-  animation: pulse 4s infinite ease-in-out;
+/* 5. SELECTION COLOR */
+::selection {
+  background: #000;
+  color: #fff;
 }
