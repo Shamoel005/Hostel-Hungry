@@ -373,63 +373,74 @@ const Landing = () => {
       </nav>
 
       {/* ================= HERO SECTION ================= */}
-      <section className="relative min-h-screen flex items-center pt-28 lg:pt-20 bg-[#fbfbfd]">
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <div className="reveal text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 lg:mb-8 rounded-full bg-white border border-gray-100 shadow-sm text-[9px] lg:text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-              <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
-              Serving 12+ Universities
-            </div>
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-extrabold tracking-tighter leading-[0.9] mb-8 text-black">
-              Smart campus <br className="hidden sm:block" /> 
-              <span className="text-gray-300 italic font-medium">living.</span>
-            </h1>
-            <p className="text-lg lg:text-xl text-gray-500 max-w-md mx-auto lg:mx-0 mb-10 leading-relaxed font-light">
-              From 2 AM cravings to last-minute assignment prints, we bridge the gap between your hostel and campus vendors.
-            </p>
-            <div className="flex justify-center lg:justify-start">
-              <Link to="/signup" className="group w-full sm:w-auto px-10 py-5 bg-black text-white rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-gray-800 transition-all duration-300">
-                Start Your First Order <FaArrowRight className="group-hover:translate-x-2 transition-transform text-sm" />
-              </Link>
+      {/* ================= 2. HERO SECTION ================= */}
+<section className="relative min-h-screen flex items-center pt-20 bg-[#fbfbfd]">
+  <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+    <div className="reveal">
+      <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 rounded-full bg-white border border-gray-100 shadow-sm text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+        <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+        Serving 12+ Universities Nationwide
+      </div>
+      <h1 className="text-7xl md:text-9xl font-extrabold tracking-tighter leading-[0.85] mb-8 text-black">
+        Smart campus <br /> 
+        <span className="text-gray-300 italic font-medium">living.</span>
+      </h1>
+      <p className="text-xl text-gray-500 max-w-md mb-12 leading-relaxed font-light">
+        Stop compromising on your campus experience. From 2 AM cravings to last-minute assignment prints, we bridge the gap between your hostel and campus vendors.
+      </p>
+      <div className="flex flex-wrap gap-5">
+        <Link to="/signup" className="group px-10 py-5 bg-black text-white rounded-2xl font-bold flex items-center gap-3 hover:bg-gray-800 transition-all duration-300">
+          Start Your First Order <FaArrowRight className="group-hover:translate-x-2 transition-transform text-sm" />
+        </Link>
+      </div>
+    </div>
+
+    {/* Hero Visual - Optimized Hover Container */}
+    <div className="relative reveal hidden lg:block z-10 group">
+      <div className="w-full aspect-[4/5] rounded-[3rem] bg-white shadow-[0_40px_100px_rgba(0,0,0,0.04)] border border-gray-100 p-12 flex flex-col justify-between hover-lift transition-all duration-500 ease-out">
+        
+        <div className="flex justify-between items-center border-b border-gray-50 pb-8">
+          <div>
+            <h4 className="font-black text-xl tracking-tighter">HOSTEL</h4>
+            <p className="text-[10px] font-bold text-gray-300 tracking-[0.3em]">DASHBOARD</p>
+          </div>
+          <div className="px-4 py-2 bg-gray-50 rounded-full text-[10px] font-bold text-green-600 flex items-center gap-2">
+             <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+             ONLINE
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          {/* Item 1 */}
+          <div className="p-6 bg-gray-50 rounded-[2rem] border border-gray-100 flex items-center gap-5 transition-all duration-300 hover:bg-white hover:shadow-xl group/item">
+            <div className="w-14 h-14 bg-white shadow-sm rounded-2xl flex items-center justify-center text-2xl group-hover/item:scale-110 transition-transform">🍕</div>
+            <div>
+              <h5 className="font-bold text-sm">Spicy Paneer Maggi</h5>
+              <p className="text-[10px] text-gray-400 font-medium">Coming from VC Canteen • 4 mins away</p>
             </div>
           </div>
-
-          {/* Hero Visual - Dashboard Card (Hidden on very small mobile) */}
-          <div className="relative reveal hidden sm:block">
-            <div className="w-full aspect-[4/5] lg:aspect-[4/5] rounded-[2.5rem] lg:rounded-[3rem] bg-white shadow-2xl border border-gray-100 p-8 lg:p-12 flex flex-col justify-between">
-              <div className="flex justify-between items-center border-b border-gray-50 pb-6 lg:pb-8">
-                <div>
-                  <h4 className="font-black text-lg lg:text-xl tracking-tighter">HOSTEL</h4>
-                  <p className="text-[9px] lg:text-[10px] font-bold text-gray-300 tracking-[0.3em]">DASHBOARD</p>
-                </div>
-                <div className="px-3 lg:px-4 py-1.5 lg:py-2 bg-gray-50 rounded-full text-[9px] lg:text-[10px] font-bold text-green-600">ONLINE</div>
-              </div>
-
-              <div className="space-y-4 lg:space-y-6 my-8">
-                <div className="p-4 lg:p-6 bg-gray-50 rounded-[1.5rem] lg:rounded-[2rem] border border-gray-100 flex items-center gap-4 lg:gap-5 transition-all">
-                  <div className="w-10 h-10 lg:w-14 lg:h-14 bg-white shadow-sm rounded-xl lg:rounded-2xl flex items-center justify-center text-xl lg:text-2xl">🍕</div>
-                  <div>
-                    <h5 className="font-bold text-xs lg:text-sm">Spicy Paneer Maggi</h5>
-                    <p className="text-[9px] lg:text-[10px] text-gray-400 font-medium">Coming from VC Canteen</p>
-                  </div>
-                </div>
-                <div className="p-4 lg:p-6 bg-gray-50 rounded-[1.5rem] lg:rounded-[2rem] border border-gray-100 flex items-center gap-4 lg:gap-5 opacity-50">
-                  <div className="w-10 h-10 lg:w-14 lg:h-14 bg-white shadow-sm rounded-xl lg:rounded-2xl flex items-center justify-center text-xl lg:text-2xl">📑</div>
-                  <div>
-                    <h5 className="font-bold text-xs lg:text-sm">Lab Report #4</h5>
-                    <p className="text-[9px] lg:text-[10px] text-gray-400 font-medium">Ready at Library Hub</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-6 lg:pt-8 border-t border-gray-50 flex justify-between items-center">
-                <span className="text-[10px] lg:text-xs font-bold text-gray-300 uppercase tracking-widest">Wallet</span>
-                <span className="font-black text-lg lg:text-xl">₹420.50</span>
-              </div>
+          
+          {/* Item 2 */}
+          <div className="p-6 bg-gray-50 rounded-[2rem] border border-gray-100 flex items-center gap-5 transition-all duration-300 hover:bg-white hover:shadow-xl opacity-60 hover:opacity-100 group/item">
+            <div className="w-14 h-14 bg-white shadow-sm rounded-2xl flex items-center justify-center text-2xl group-hover/item:scale-110 transition-transform">📑</div>
+            <div>
+              <h5 className="font-bold text-sm">Lab Report #4 (Printed)</h5>
+              <p className="text-[10px] text-gray-400 font-medium">Ready at Central Library Hub</p>
             </div>
           </div>
         </div>
-      </section>
+
+        <div className="pt-8 border-t border-gray-50 flex justify-between items-center">
+          <span className="text-xs font-bold text-gray-300 uppercase tracking-wider">Wallet Balance</span>
+          <span className="font-black text-2xl text-black">₹420.50</span>
+        </div>
+      </div>
+      
+      {/* Decorative Background Glow for Hover Effect */}
+      <div className="absolute -inset-4 bg-gradient-to-tr from-black/5 to-transparent blur-3xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+    </div>
+  </div>
+</section>
 
       {/* ================= HOW IT WORKS ================= */}
       <section id="howitworks" className="py-24 lg:py-40 bg-white">
