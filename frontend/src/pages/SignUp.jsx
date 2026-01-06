@@ -1,4 +1,4 @@
-/*import React, { useState } from "react";
+import React, { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
@@ -29,7 +29,7 @@ function SignUp() {
   const [loading, setLoading] = useState(false);
 
   /*  SIGN UP (EMAIL VERIFICATION)  */
-  /*const handleSignUp = async () => {
+  const handleSignUp = async () => {
     if (loading) return;
 
     if (!fullName || !email || !password || !mobile) {
@@ -62,7 +62,7 @@ function SignUp() {
   };
 
   /* GOOGLE AUTH */
-  /*const handleGoogleAuth = async () => {
+  const handleGoogleAuth = async () => {
     if (loading) return;
 
     if (!mobile) {
@@ -112,7 +112,7 @@ function SignUp() {
           Create your account to get started with delicious food deliveries
         </p>
 
-        {/* Full Name }
+        {/* Full Name */}
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-1">
             Full Name
@@ -126,7 +126,7 @@ function SignUp() {
           />
         </div>
 
-        {/* Email }
+        {/* Email */}
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-1">Email</label>
           <input
@@ -138,7 +138,7 @@ function SignUp() {
           />
         </div>
 
-        {/* Mobile }
+        {/* Mobile*/ }
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-1">
             Mobile
@@ -152,7 +152,7 @@ function SignUp() {
           />
         </div>
 
-        {/* Password }
+        {/* Password */}
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-1">
             Password
@@ -175,7 +175,7 @@ function SignUp() {
           </div>
         </div>
 
-        {/* Role }
+        {/* Role */}
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-1">Role</label>
           <div className="flex gap-2">
@@ -197,7 +197,7 @@ function SignUp() {
           </div>
         </div>
 
-        {/* Sign Up Button }
+        {/* Sign Up Button*/ }
         <button
           onClick={handleSignUp}
           disabled={loading}
@@ -211,7 +211,7 @@ function SignUp() {
           <p className="text-green-600 text-center mt-3">{success}</p>
         )}
 
-        {/* Google }
+        {/* Google */}
         <button
           disabled={loading}
           onClick={handleGoogleAuth}
@@ -234,8 +234,6 @@ function SignUp() {
 }
 
 export default SignUp;
-
-*/
 
 
 
@@ -378,274 +376,5 @@ export default SignUp;
 
 // export default SignUp
 
-import React, { useState } from "react";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { serverUrl } from "../App";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "../../firebase";
-import { ClipLoader } from "react-spinners";
-import { useDispatch } from "react-redux";
-import { setUserData } from "../redux/userSlice";
-import { motion } from "framer-motion";
 
-/* ================= ANIMATION ================= */
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-};
-
-function SignUp() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const [showPassword, setShowPassword] = useState(false);
-  const [role, setRole] = useState("user");
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [err, setErr] = useState("");
-  const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  // 🔒 LOGIC UNCHANGED
-  const handleSignUp = async () => {
-    if (!fullName || !email || !password || !mobile) {
-      setErr("All fields are required");
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const { data } = await axios.post(
-        `${serverUrl}/api/auth/signup`,
-        { fullName, email, password, mobile, role },
-        { withCredentials: true }
-      );
-
-      setErr("");
-      setSuccess(data?.message || "Please verify your email before login");
-      setTimeout(() => navigate("/signin"), 3000);
-    } catch (error) {
-      setSuccess("");
-      setErr(error?.response?.data?.message || "Signup failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleAuth = async () => {
-    if (!mobile) {
-      setErr("Mobile number is required for Google signup");
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-
-      const { data } = await axios.post(
-        `${serverUrl}/api/auth/google-auth`,
-        {
-          fullName: result.user.displayName,
-          email: result.user.email,
-          role,
-          mobile,
-        },
-        { withCredentials: true }
-      );
-
-      dispatch(setUserData(data));
-      navigate("/home");
-    } catch {
-      setErr("Google sign-in cancelled or failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="min-h-screen grid md:grid-cols-2">
-
-      {/* ================= LEFT PANEL ================= */}
-      <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        animate="visible"
-        className="hidden md:flex flex-col justify-center px-20
-                   bg-gradient-to-b from-gray-700 to-gray-900 text-white"
-      >
-        <div className="text-xl tracking-tight select-none">
-          <span className="font-semibold">Hostel</span>
-          <span className="font-light ml-1 text-white/80">Hungry</span>
-        </div>
-
-        <h1 className="mt-10 text-4xl font-semibold leading-tight">
-          Create your account,
-          <br /> and get started.
-        </h1>
-
-        <p className="mt-6 text-lg text-white/70 max-w-md">
-          Join thousands of students using Hostel Hungry to manage food,
-          essentials and hostel services effortlessly.
-        </p>
-
-        <p className="mt-10 text-sm text-white/50">
-          Simple • Reliable • Student-first
-        </p>
-      </motion.div>
-
-      {/* ================= RIGHT PANEL ================= */}
-      <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        animate="visible"
-        className="flex items-center justify-center px-6 bg-white"
-      >
-        <div className="w-full max-w-md">
-
-          <h2 className="text-2xl font-semibold text-gray-900">
-            Create account
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Get started with Hostel Hungry
-          </p>
-
-          {/* INPUTS */}
-          {[{
-            type: "text",
-            value: fullName,
-            onChange: setFullName,
-            placeholder: "Enter your full name",
-          },{
-            type: "email",
-            value: email,
-            onChange: setEmail,
-            placeholder: "Enter your email address",
-          },{
-            type: "tel",
-            value: mobile,
-            onChange: setMobile,
-            placeholder: "Enter your mobile number",
-          }].map((field, i) => (
-            <motion.input
-              key={i}
-              type={field.type}
-              value={field.value}
-              onChange={(e) => field.onChange(e.target.value)}
-              placeholder={field.placeholder}
-              whileFocus={{ scale: 1.01 }}
-              className="mt-5 w-full rounded-full border border-gray-300
-                         px-5 py-3 text-sm transition
-                         focus:outline-none focus:border-black"
-            />
-          ))}
-
-          {/* PASSWORD */}
-          <motion.div className="mt-5 relative" whileFocus={{ scale: 1.01 }}>
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Create a password"
-              className="w-full rounded-full border border-gray-300
-                         px-5 py-3 pr-12 text-sm
-                         focus:outline-none focus:border-black"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button
-              type="button"
-              className="absolute right-4 top-[14px] text-gray-500"
-              onClick={() => setShowPassword((p) => !p)}
-            >
-              {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
-            </button>
-          </motion.div>
-
-          {/* ROLE */}
-          <div className="mt-6 flex gap-2">
-            {[
-              { label: "Student", value: "user" },
-              { label: "Owner", value: "owner" },
-              { label: "Delivery Partner", value: "deliveryBoy" },
-            ].map((r) => (
-              <motion.button
-                key={r.value}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setRole(r.value)}
-                className={`flex-1 rounded-full px-4 py-2 text-sm font-medium border
-                  ${role === r.value
-                    ? "bg-black text-white border-black"
-                    : "border-gray-300 text-gray-700 hover:border-black"}`}
-              >
-                {r.label}
-              </motion.button>
-            ))}
-          </div>
-
-          {/* SIGN UP */}
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={handleSignUp}
-            disabled={loading}
-            className="mt-6 w-full rounded-full border border-black
-                       px-6 py-3 text-sm font-medium
-                       hover:bg-black hover:text-white transition"
-          >
-            {loading ? <ClipLoader size={18} /> : "Create account"}
-          </motion.button>
-
-          {/* STATUS */}
-          {err && (
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              className="mt-3 text-sm text-red-500">
-              {err}
-            </motion.p>
-          )}
-          {success && (
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              className="mt-3 text-sm text-green-600">
-              {success}
-            </motion.p>
-          )}
-
-          {/* GOOGLE */}
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            onClick={handleGoogleAuth}
-            className="mt-4 w-full rounded-full border border-gray-300
-                       px-6 py-3 text-sm font-medium
-                       flex items-center justify-center gap-2
-                       hover:bg-gray-50 transition"
-          >
-            <FcGoogle size={18} />
-            Continue with Google
-          </motion.button>
-
-          {/* SIGN IN */}
-          <p
-            className="mt-6 text-sm text-center text-gray-600 cursor-pointer"
-            onClick={() => navigate("/signin")}
-          >
-            Already have an account?{" "}
-            <span className="text-black font-medium hover:underline">
-              Sign in
-            </span>
-          </p>
-
-        </div>
-      </motion.div>
-    </div>
-  );
-}
-
-export default SignUp;
 
