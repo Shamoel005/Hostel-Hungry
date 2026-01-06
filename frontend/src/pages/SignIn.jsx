@@ -1,4 +1,4 @@
-import React from 'react'
+/*import React from 'react'
 import { useState } from 'react';
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
@@ -96,6 +96,184 @@ function SignIn() {
 }
 
 export default SignIn
+*/
+import React, { useState } from "react";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { serverUrl } from "../App";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../../firebase";
+import { ClipLoader } from "react-spinners";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../redux/userSlice";
+
+const SignIn = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
+
+  /* ================= SIGN IN ================= */
+  const handleSignIn = async () => {
+    setLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${serverUrl}/api/auth/signin`,
+        { email, password },
+        { withCredentials: true }
+      );
+      dispatch(setUserData(data));
+      setErr("");
+      navigate("/");
+    } catch (error) {
+      setErr(error?.response?.data?.message || "Signin failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* ================= GOOGLE AUTH ================= */
+  const handleGoogleAuth = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+
+      const { data } = await axios.post(
+        `${serverUrl}/api/auth/google-auth`,
+        { email: result.user.email },
+        { withCredentials: true }
+      );
+
+      dispatch(setUserData(data));
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex bg-black text-white">
+
+      {/* ================= LEFT (BRAND / HERO) ================= */}
+      <div className="hidden lg:flex w-1/2 relative items-center justify-center bg-gradient-to-b from-gray-900 to-black">
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="relative z-10 max-w-lg text-center animate-fade-up">
+          <h1 className="text-5xl font-semibold tracking-tight">
+            Hostel Hungry
+          </h1>
+          <p className="mt-6 text-lg text-white/70">
+            One account. All your food, essentials, and hostel services —
+            delivered simply.
+          </p>
+        </div>
+      </div>
+
+      {/* ================= RIGHT (SIGN IN CARD) ================= */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-6">
+        <div className="w-full max-w-md bg-white text-gray-900 rounded-3xl p-8 shadow-xl border border-gray-200 animate-fade-up">
+
+          <h2 className="text-3xl font-semibold tracking-tight">
+            Sign in
+          </h2>
+          <p className="mt-2 text-gray-500">
+            Welcome back. Continue your hostel journey.
+          </p>
+
+          {/* EMAIL */}
+          <div className="mt-8">
+            <label className="text-sm font-medium">Email</label>
+            <input
+              type="email"
+              className="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-black"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          {/* PASSWORD */}
+          <div className="mt-5">
+            <label className="text-sm font-medium">Password</label>
+            <div className="relative mt-2">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="w-full rounded-xl border px-4 py-3 pr-12 outline-none focus:ring-2 focus:ring-black"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+              </button>
+            </div>
+          </div>
+
+          {/* FORGOT */}
+          <div
+            className="mt-4 text-sm text-right text-black/70 cursor-pointer hover:underline"
+            onClick={() => navigate("/forgot-password")}
+          >
+            Forgot password?
+          </div>
+
+          {/* SIGN IN BUTTON */}
+          <button
+            onClick={handleSignIn}
+            disabled={loading}
+            className="mt-6 w-full rounded-full bg-black text-white py-3 font-medium transition hover:bg-black/90"
+          >
+            {loading ? <ClipLoader size={18} color="white" /> : "Sign in"}
+          </button>
+
+          {err && (
+            <p className="text-red-500 text-sm text-center mt-4">
+              * {err}
+            </p>
+          )}
+
+          {/* DIVIDER */}
+          <div className="my-6 flex items-center gap-3">
+            <div className="flex-1 h-px bg-gray-200" />
+            <span className="text-xs text-gray-400">OR</span>
+            <div className="flex-1 h-px bg-gray-200" />
+          </div>
+
+          {/* GOOGLE */}
+          <button
+            onClick={handleGoogleAuth}
+            className="w-full flex items-center justify-center gap-3 rounded-full border py-3 transition hover:bg-gray-50"
+          >
+            <FcGoogle size={20} />
+            <span className="font-medium">Sign in with Google</span>
+          </button>
+
+          {/* SIGN UP */}
+          <p className="mt-8 text-center text-sm text-gray-600">
+            Don’t have an account?{" "}
+            <span
+              className="text-black font-medium cursor-pointer hover:underline"
+              onClick={() => navigate("/signup")}
+            >
+              Create one
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SignIn;
+
 
 
 
