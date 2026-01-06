@@ -442,7 +442,35 @@ const Landing = () => {
   </div>
 </section>
 
-     v
+     {/* ================= 3. HOW IT WORKS ================= */}
+<section id="howitworks" className="py-40 bg-white">
+  <div className="max-w-7xl mx-auto px-6">
+    <div className="reveal flex flex-col items-center text-center mb-28">
+      <span className="text-[11px] font-black uppercase tracking-[0.5em] text-gray-300 mb-4">The Process</span>
+      <h2 className="text-5xl font-extrabold tracking-tight text-black">Simple. Fast. Campus-Ready.</h2>
+    </div>
+    
+    <div className="grid md:grid-cols-3 gap-10">
+      {[
+        { icon: <FaStore />, title: "Digital Menu", desc: "Browse every canteen, stationery shop, and pharmacy operating within your campus walls in real-time." },
+        { icon: <FaClock />, title: "Priority Delivery", desc: "Our student-runners know every shortcut, ensuring your order beats the rush and arrives in under 15 minutes." },
+        { icon: <FaShieldAlt />, title: "Secure Drop", desc: "Verified delivery to your specific hostel gate or common area with OTP-based secure handovers." }
+      ].map((step, i) => (
+        <div 
+          key={i} 
+          className="reveal group p-8 rounded-[2.5rem] hover:bg-[#fbfbfd] hover-lift transition-all" 
+          style={{ transitionDelay: `${i * 150}ms` }}
+        >
+          <div className="text-6xl text-gray-100 font-black mb-6 group-hover:text-black/5 transition-colors duration-500">
+            0{i+1}
+          </div>
+          <h3 className="text-2xl font-bold mb-4 tracking-tight group-hover:translate-x-1 transition-transform">{step.title}</h3>
+          <p className="text-gray-500 text-sm leading-relaxed font-light">{step.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
       {/* ================= CATEGORIES ================= */}
       <section id="categories" className="py-20 lg:py-40 bg-black text-white rounded-[2.5rem] lg:rounded-[4rem] mx-4 mb-10">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
