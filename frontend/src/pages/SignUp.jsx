@@ -254,10 +254,12 @@ const SignUp = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState("user");
+
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mobile, setMobile] = useState("");
+
   const [err, setErr] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
@@ -271,6 +273,7 @@ const SignUp = () => {
 
     try {
       setLoading(true);
+
       const { data } = await axios.post(
         `${serverUrl}/api/auth/signup`,
         { fullName, email, password, mobile, role },
@@ -278,11 +281,11 @@ const SignUp = () => {
       );
 
       setErr("");
-      setSuccess(data?.message || "Please verify your email");
+      setSuccess(data?.message || "Please verify your email before login");
 
       setTimeout(() => {
         navigate("/signin");
-      }, 3000);
+      }, 2500);
     } catch (error) {
       setSuccess("");
       setErr(error?.response?.data?.message || "Signup failed");
@@ -300,6 +303,7 @@ const SignUp = () => {
 
     try {
       setLoading(true);
+
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
 
@@ -315,9 +319,12 @@ const SignUp = () => {
       );
 
       dispatch(setUserData(data));
-      navigate("/home");
-    } catch {
-      setErr("Google signup failed");
+
+      // ✅ BUILD SAFE ROUTE
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      setErr("Google signup cancelled or failed");
     } finally {
       setLoading(false);
     }
@@ -353,7 +360,6 @@ const SignUp = () => {
                      border border-black/5 shadow-xl p-8
                      animate-fade-up transition-all duration-300"
         >
-
           {/* HEADER */}
           <div className="text-center">
             <div className="text-xl tracking-tight select-none">
@@ -441,33 +447,32 @@ const SignUp = () => {
           </div>
 
           {/* ROLE */}
-         <div className="mt-6">
-  <label className="text-sm font-medium text-gray-700">
-    Select role
-  </label>
+          <div className="mt-6">
+            <label className="text-sm font-medium text-gray-700">
+              Select role
+            </label>
 
-  <div className="mt-2 grid grid-cols-3 gap-2">
-    {[
-      { value: "user", label: "Student" },
-      { value: "owner", label: "Owner" },
-      { value: "deliveryBoy", label: "Delivery Partner" },
-    ].map((roleItem) => (
-      <button
-        key={roleItem.value}
-        onClick={() => setRole(roleItem.value)} // 👈 LOGIC SAME
-        className={`py-2 rounded-xl text-sm font-medium transition
-          ${
-            role === roleItem.value
-              ? "bg-black text-white"
-              : "border border-gray-300 text-gray-700 hover:bg-gray-100"
-          }`}
-      >
-        {roleItem.label}
-      </button>
-    ))}
-  </div>
-</div>
-
+            <div className="mt-2 grid grid-cols-3 gap-2">
+              {[
+                { value: "user", label: "Student" },
+                { value: "owner", label: "Owner" },
+                { value: "deliveryBoy", label: "Delivery Partner" },
+              ].map((r) => (
+                <button
+                  key={r.value}
+                  onClick={() => setRole(r.value)}
+                  className={`py-2 rounded-xl text-sm font-medium transition
+                    ${
+                      role === r.value
+                        ? "bg-black text-white"
+                        : "border border-gray-300 text-gray-700 hover:bg-gray-100"
+                    }`}
+                >
+                  {r.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* SIGN UP */}
           <button
@@ -530,6 +535,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
-
-
