@@ -1,22 +1,27 @@
 @import "tailwindcss";
 
+/* 1. GLOBAL SCROLLBAR HIDE & TYPOGRAPHY */
 * {
- /* ya scroll */
   scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE/Edge purane versions */
+  -ms-overflow-style: none; /* IE/Edge */
 }
 
-::-webkit-scrollbar, 
 ::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont,
-    "SF Pro Display", "SF Pro Text",
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
     "Helvetica Neue", Helvetica, Arial, sans-serif;
   background-color: #ffffff;
+  -webkit-font-smoothing: antialiased;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+/* 2. HERO ENTRANCE ANIMATIONS */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -31,13 +36,41 @@ body {
 .animate-fade-up {
   animation: fadeUp 0.9s ease-out both;
 }
+
+/* 3. CARD HOVER EFFECTS */
 .hover-lift {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
+
 .hover-lift:hover {
   transform: translateY(-6px);
   box-shadow: 0 18px 36px rgba(0, 0, 0, 0.08);
 }
 
+/* 4. SCROLL REVEAL (For Landing Page Sections) */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
 
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 
+/* 5. BACKGROUND BLOB ANIMATIONS */
+@keyframes pulse {
+  0%, 100% { 
+    opacity: 0.3; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 0.5; 
+    transform: scale(1.1); 
+  }
+}
+
+.animate-pulse {
+  animation: pulse 4s infinite ease-in-out;
+}
