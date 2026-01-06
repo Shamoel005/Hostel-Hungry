@@ -240,7 +240,7 @@
 //shamoel commit here
 
 import React, { useState } from "react";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { FaRegEye, FaRegEyeSlash, FaArrowLeft, FaCheckCircle } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -265,6 +265,7 @@ function SignUp() {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
+  /* ================= HANDLERS (Same Logic) ================= */
   const handleSignUp = async () => {
     if (loading) return;
     if (!fullName || !email || !password || !mobile) {
@@ -314,61 +315,84 @@ function SignUp() {
   };
 
   return (
-    <div className="min-h-screen flex bg-gray-50 lg:bg-gray-900">
+    <div className="min-h-screen flex bg-white selection:bg-black selection:text-white">
       
-      {/* LEFT SIDE - HIDDEN ON MOBILE, VISIBLE ON DESKTOP */}
-      <div className="hidden lg:flex w-1/2 relative items-center justify-center">
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-700" />
-        <div className="relative z-10 max-w-lg px-10 text-center animate-fade-up">
-          <h1 className="text-5xl tracking-tight select-none">
-      <span className="font-bold text-white">Hostel</span>
-      <span className="font-light text-gray-400 ml-2">Hungry</span>
-    </h1>
-          <p className="mt-6 text-lg text-white/70 leading-relaxed">
-            Everything a college student needs in one simple experience.
+      {/* --- LEFT SIDE: BRANDING (Fixed Name) --- */}
+      <div className="hidden lg:flex w-[40%] bg-[#fbfbfd] items-center justify-center p-20 relative overflow-hidden border-r border-gray-100">
+        <div className="relative z-10 animate-fade-up">
+          <div onClick={() => navigate("/")} className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 hover:text-black cursor-pointer transition-colors mb-20">
+            <FaArrowLeft /> Back to Home
+          </div>
+          
+          <div className="flex flex-col leading-[0.85] mb-10">
+              <span className="font-black text-6xl tracking-tighter text-black uppercase">Hostel</span>
+              <span className="text-xl font-bold text-gray-300 tracking-[0.4em] uppercase ml-1 mt-2">Hungry</span>
+          </div>
+          
+          <p className="text-2xl font-light text-gray-500 leading-tight mb-8 max-w-sm">
+            Everything a student needs — <span className="italic font-medium text-black">food, essentials, and services</span> — in one place.
           </p>
+
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 text-gray-400 text-sm font-medium">
+               <FaCheckCircle className="text-black" /> Verified University Vendors
+            </div>
+            <div className="flex items-center gap-3 text-gray-400 text-sm font-medium">
+               <FaCheckCircle className="text-black" /> Instant Campus Delivery
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* RIGHT SIDE - OPTIMIZED FOR MOBILE */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-md bg-white rounded-[2rem] border border-black/5 shadow-2xl p-6 sm:p-10 animate-fade-up">
+      {/* --- RIGHT SIDE: PREMIUM FORM --- */}
+      <div className="w-full lg:w-[60%] flex items-center justify-center px-8 lg:px-24 py-12">
+        <div className="w-full max-w-[440px] animate-fade-up">
           
-          {/* BRAND HEADER */}
-          <div className="text-center mb-8">
-            <div className="text-2xl tracking-tight">
-              <span className="font-bold text-gray-900">Hostel</span>
-              <span className="font-light text-gray-600 ml-1">Hungry</span>
+          <header className="mb-10 text-center lg:text-left">
+            <h1 className="text-[32px] font-black tracking-tight text-black mb-2">Create Account.</h1>
+            <p className="text-gray-400 font-medium text-sm">Join the Hostel Hungry community today.</p>
+          </header>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="group md:col-span-2">
+              <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2 ml-1">Full Name</label>
+              <input
+                type="text"
+                className="w-full rounded-[20px] bg-[#f5f5f7] border-2 border-transparent px-6 py-4 text-sm font-semibold text-black outline-none transition-all duration-300 focus:bg-white focus:border-black/5 focus:ring-4 focus:ring-black/[0.02]"
+                placeholder="Enter your name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+              />
             </div>
-            <p className="mt-1 text-sm text-gray-400">Join the student community</p>
-          </div>
 
-          <div className="space-y-4">
-            {/* INPUT FIELDS */}
-            {[
-              { label: "Full Name", value: fullName, setter: setFullName, type: "text", placeholder: "Enter name" },
-              { label: "Email", value: email, setter: setEmail, type: "email", placeholder: "college@edu.in" },
-              { label: "Mobile", value: mobile, setter: setMobile, type: "tel", placeholder: "10-digit number" },
-            ].map((field, idx) => (
-              <div key={idx}>
-                <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">{field.label}</label>
-                <input
-                  type={field.type}
-                  className="mt-1 w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3.5 outline-none focus:bg-white focus:border-black focus:ring-4 focus:ring-black/5 transition-all"
-                  placeholder={field.placeholder}
-                  value={field.value}
-                  onChange={(e) => field.setter(e.target.value)}
-                />
-              </div>
-            ))}
+            <div className="group">
+              <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2 ml-1">Email</label>
+              <input
+                type="email"
+                className="w-full rounded-[20px] bg-[#f5f5f7] border-2 border-transparent px-6 py-4 text-sm font-semibold text-black outline-none transition-all duration-300 focus:bg-white focus:border-black/5 focus:ring-4 focus:ring-black/[0.02]"
+                placeholder="university@email.edu"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
 
-            {/* PASSWORD */}
-            <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">Password</label>
-              <div className="relative mt-1">
+            <div className="group">
+              <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2 ml-1">Mobile</label>
+              <input
+                type="tel"
+                className="w-full rounded-[20px] bg-[#f5f5f7] border-2 border-transparent px-6 py-4 text-sm font-semibold text-black outline-none transition-all duration-300 focus:bg-white focus:border-black/5 focus:ring-4 focus:ring-black/[0.02]"
+                placeholder="Contact Number"
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
+              />
+            </div>
+
+            <div className="group md:col-span-2">
+              <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2 ml-1">Password</label>
+              <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
-                  className="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3.5 pr-12 outline-none focus:bg-white focus:border-black focus:ring-4 focus:ring-black/5 transition-all"
+                  className="w-full rounded-[20px] bg-[#f5f5f7] border-2 border-transparent px-6 py-4 text-sm font-semibold text-black outline-none transition-all duration-300 focus:bg-white focus:border-black/5 focus:ring-4 focus:ring-black/[0.02]"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -376,68 +400,60 @@ function SignUp() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+                  className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-300 hover:text-black transition-colors"
                 >
-                  {showPassword ? <FaRegEyeSlash size={20}/> : <FaRegEye size={20}/>}
+                  {showPassword ? <FaRegEyeSlash size={18} /> : <FaRegEye size={18} />}
                 </button>
               </div>
             </div>
+          </div>
 
-            {/* ROLE PICKER - BIGGER TOUCH TARGETS FOR MOBILE */}
-            <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">I am a...</label>
-              <div className="flex gap-2 mt-1">
-                {["user", "owner", "delivery"].map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => setRole(r === "delivery" ? "deliveryBoy" : r)}
-                    className={`flex-1 py-3 text-xs font-bold rounded-2xl border transition-all ${
-                      (role === r || (role === "deliveryBoy" && r === "delivery"))
-                        ? "bg-black text-white border-black shadow-lg"
-                        : "bg-white text-gray-500 border-gray-100 hover:border-gray-300"
-                    }`}
-                  >
-                    {r.toUpperCase()}
-                  </button>
-                ))}
-              </div>
+          <div className="mt-8">
+            <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-3 ml-1">Account Type</label>
+            <div className="flex gap-3">
+              {["user", "owner", "deliveryBoy"].map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => setRole(r)}
+                  className={`flex-1 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${
+                    role === r 
+                    ? "bg-black text-white shadow-lg scale-[1.02]" 
+                    : "bg-[#f5f5f7] text-gray-400 hover:bg-gray-100"
+                  }`}
+                >
+                  {r === "deliveryBoy" ? "Delivery" : r}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* ACTIONS */}
-          <button
-            onClick={handleSignUp}
-            disabled={loading}
-            className="mt-8 w-full rounded-2xl bg-black text-white py-4 font-bold shadow-xl shadow-black/10 active:scale-95 transition-transform flex justify-center items-center"
-          >
-            {loading ? <ClipLoader size={20} color="white" /> : "Sign Up Now"}
-          </button>
+          {err && <p className="mt-6 text-red-600 text-[11px] font-black uppercase tracking-widest text-center">⚠️ {err}</p>}
+          {success && <p className="mt-6 text-green-600 text-[11px] font-black uppercase tracking-widest text-center">✅ {success}</p>}
 
-          {err && <p className="mt-4 text-xs text-red-500 text-center font-medium italic">{err}</p>}
-          {success && <p className="mt-4 text-xs text-green-600 text-center font-medium">{success}</p>}
+          <div className="mt-10 space-y-4">
+            <button
+              onClick={handleSignUp}
+              disabled={loading}
+              className="w-full bg-black text-white py-5 rounded-[22px] font-black uppercase tracking-[0.2em] text-[11px] transition-all hover:bg-gray-800 active:scale-[0.98] shadow-2xl shadow-black/10 flex items-center justify-center min-h-[60px]"
+            >
+              {loading ? <ClipLoader size={18} color="white" /> : "Create Account"}
+            </button>
 
-          <div className="my-6 flex items-center gap-3">
-            <div className="flex-1 h-px bg-gray-100" />
-            <span className="text-[10px] font-bold text-gray-300">OR</span>
-            <div className="flex-1 h-px bg-gray-100" />
+            <button
+              onClick={handleGoogleAuth}
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-3 rounded-[22px] border-2 border-gray-100 py-4.5 font-black text-[10px] uppercase tracking-[0.2em] text-gray-500 hover:bg-gray-50 transition-all active:scale-[0.98]"
+            >
+              <FcGoogle size={18} />
+              Google Sign Up
+            </button>
           </div>
 
-          <button
-            onClick={handleGoogleAuth}
-            className="w-full flex items-center justify-center gap-3 rounded-2xl border border-gray-100 py-3.5 hover:bg-gray-50 transition-all active:scale-95"
-          >
-            <FcGoogle size={22} />
-            <span className="font-bold text-gray-700 text-sm">Google Signup</span>
-          </button>
-
-          <p className="mt-8 text-center text-sm text-gray-500">
-            Already a member?{" "}
-            <span
-              className="font-bold text-black cursor-pointer underline underline-offset-4"
-              onClick={() => navigate("/signin")}
-            >
-              Log In
+          <p className="mt-12 text-center text-[12px] font-medium text-gray-400">
+            Member already?{" "}
+            <span onClick={() => navigate("/signin")} className="font-black text-black uppercase tracking-widest ml-1 cursor-pointer hover:underline underline-offset-4">
+              Sign In
             </span>
           </p>
         </div>
