@@ -378,9 +378,10 @@ const SignIn = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-700" />
 
         <div className="relative z-10 max-w-lg px-10 text-center animate-fade-up">
-          <h1 className="text-5xl font-semibold tracking-tight text-white">
-            Hostel Hungry
-          </h1>
+          <h1 className="text-5xl tracking-tight select-none">
+      <span className="font-bold text-white">Hostel</span>
+      <span className="font-light text-gray-400 ml-2">Hungry</span>
+    </h1>
           <p className="mt-6 text-lg text-white/70 leading-relaxed">
             Everything a college student needs — food, essentials,
             stationery, and hostel services — in one simple experience.
