@@ -442,30 +442,7 @@ const Landing = () => {
   </div>
 </section>
 
-      {/* ================= HOW IT WORKS ================= */}
-      <section id="howitworks" className="py-24 lg:py-40 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="reveal flex flex-col items-center text-center mb-16 lg:mb-28">
-            <span className="text-[10px] font-black uppercase tracking-[0.5em] text-gray-300 mb-4">The Process</span>
-            <h2 className="text-3xl lg:text-5xl font-extrabold tracking-tight text-black">Simple. Fast. Campus-Ready.</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-20">
-            {[
-              { icon: <FaStore />, title: "Digital Menu", desc: "Browse every canteen, stationery shop, and pharmacy operating within your campus." },
-              { icon: <FaClock />, title: "Priority Delivery", desc: "Student-runners ensure your order beats the rush and arrives in under 15 minutes." },
-              { icon: <FaShieldAlt />, title: "Secure Drop", desc: "Verified delivery to your hostel gate with OTP-based secure handovers." }
-            ].map((step, i) => (
-              <div key={i} className="reveal text-center md:text-left">
-                <div className="text-4xl lg:text-5xl text-gray-100 font-black mb-4">0{i+1}</div>
-                <h3 className="text-xl lg:text-2xl font-bold mb-4 tracking-tight">{step.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed font-light">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
+     v
       {/* ================= CATEGORIES ================= */}
       <section id="categories" className="py-20 lg:py-40 bg-black text-white rounded-[2.5rem] lg:rounded-[4rem] mx-4 mb-10">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
