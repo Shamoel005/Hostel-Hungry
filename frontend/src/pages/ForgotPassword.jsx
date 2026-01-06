@@ -115,18 +115,6 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { serverUrl } from "../App";
 import { ClipLoader } from "react-spinners";
-import { motion, AnimatePresence } from "framer-motion";
-
-/* ================= ANIMATION ================= */
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" },
-  },
-  exit: { opacity: 0, y: -12 },
-};
 
 function ForgotPassword() {
   const [step, setStep] = useState(1);
@@ -139,7 +127,7 @@ function ForgotPassword() {
 
   const navigate = useNavigate();
 
-  // ===== LOGIC SAME =====
+  // ===== LOGIC UNCHANGED =====
   const handleSendOtp = async () => {
     setLoading(true);
     try {
@@ -198,14 +186,9 @@ function ForgotPassword() {
   return (
     <div className="min-h-screen grid md:grid-cols-2">
 
-      {/* ================= LEFT PANEL ================= */}
-      <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        animate="visible"
-        className="hidden md:flex flex-col justify-center px-20
-                   bg-gradient-to-b from-gray-700 to-gray-900 text-white"
-      >
+      {/* ================= LEFT LANDING PANEL ================= */}
+      <div className="hidden md:flex flex-col justify-center px-20
+                      bg-gradient-to-b from-gray-900 to-gray-700 text-white">
         <div className="text-xl tracking-tight select-none">
           <span className="font-semibold">Hostel</span>
           <span className="font-light text-white/80 ml-1">Hungry</span>
@@ -213,26 +196,21 @@ function ForgotPassword() {
 
         <h1 className="mt-10 text-4xl font-semibold leading-tight">
           Reset your password,
-          <br /> get back on track.
+          <br /> securely and quickly.
         </h1>
 
         <p className="mt-6 text-lg text-white/70 max-w-md">
-          Securely reset your password and continue using Hostel Hungry without
-          any interruption.
+          Forgot your password? No worries.
+          Verify your email and regain access to your Hostel Hungry account.
         </p>
 
         <p className="mt-10 text-sm text-white/50">
-          Secure • Simple • Reliable
+          Simple • Secure • Student-first
         </p>
-      </motion.div>
+      </div>
 
       {/* ================= RIGHT FORM ================= */}
-      <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        animate="visible"
-        className="flex items-center justify-center px-6 bg-white"
-      >
+      <div className="flex items-center justify-center px-6 bg-white">
         <div className="w-full max-w-md">
 
           {/* BACK */}
@@ -240,7 +218,7 @@ function ForgotPassword() {
             className="flex items-center gap-2 mb-6 cursor-pointer text-gray-600 hover:text-black"
             onClick={() => navigate("/signin")}
           >
-            <IoIosArrowRoundBack size={24} />
+            <IoIosArrowRoundBack size={22} />
             <span className="text-sm">Back to sign in</span>
           </div>
 
@@ -248,140 +226,103 @@ function ForgotPassword() {
             Forgot password
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            {step === 1 && "Enter your email to receive an OTP"}
+            {step === 1 && "Enter your email to receive OTP"}
             {step === 2 && "Enter the OTP sent to your email"}
             {step === 3 && "Create a new password"}
           </p>
 
-          {/* ================= STEPS ================= */}
-          <AnimatePresence mode="wait">
+          {/* STEP 1 */}
+          {step === 1 && (
+            <>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="mt-8 w-full rounded-full border border-gray-300
+                           px-5 py-3 text-sm focus:outline-none focus:border-black"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
 
-            {/* STEP 1 */}
-            {step === 1 && (
-              <motion.div
-                key="step1"
-                variants={fadeUp}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
+              <button
+                onClick={handleSendOtp}
+                disabled={loading}
+                className="mt-6 w-full rounded-full border border-black
+                           px-6 py-3 text-sm font-medium
+                           hover:bg-black hover:text-white transition"
               >
-                <motion.input
-                  whileFocus={{ scale: 1.01 }}
-                  type="email"
-                  placeholder="Enter your email address"
-                  className="mt-8 w-full rounded-full border border-gray-300
-                             px-5 py-3 text-sm focus:outline-none focus:border-black"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+                {loading ? <ClipLoader size={18} /> : "Send OTP"}
+              </button>
+            </>
+          )}
 
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleSendOtp}
-                  disabled={loading}
-                  className="mt-6 w-full rounded-full border border-black
-                             px-6 py-3 text-sm font-medium
-                             hover:bg-black hover:text-white transition"
-                >
-                  {loading ? <ClipLoader size={18} /> : "Send OTP"}
-                </motion.button>
-              </motion.div>
-            )}
+          {/* STEP 2 */}
+          {step === 2 && (
+            <>
+              <input
+                type="text"
+                placeholder="Enter OTP"
+                className="mt-8 w-full rounded-full border border-gray-300
+                           px-5 py-3 text-sm focus:outline-none focus:border-black"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+              />
 
-            {/* STEP 2 */}
-            {step === 2 && (
-              <motion.div
-                key="step2"
-                variants={fadeUp}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
+              <button
+                onClick={handleVerifyOtp}
+                disabled={loading}
+                className="mt-6 w-full rounded-full border border-black
+                           px-6 py-3 text-sm font-medium
+                           hover:bg-black hover:text-white transition"
               >
-                <motion.input
-                  whileFocus={{ scale: 1.01 }}
-                  type="text"
-                  placeholder="Enter OTP"
-                  className="mt-8 w-full rounded-full border border-gray-300
-                             px-5 py-3 text-sm focus:outline-none focus:border-black"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                />
+                {loading ? <ClipLoader size={18} /> : "Verify OTP"}
+              </button>
+            </>
+          )}
 
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleVerifyOtp}
-                  disabled={loading}
-                  className="mt-6 w-full rounded-full border border-black
-                             px-6 py-3 text-sm font-medium
-                             hover:bg-black hover:text-white transition"
-                >
-                  {loading ? <ClipLoader size={18} /> : "Verify OTP"}
-                </motion.button>
-              </motion.div>
-            )}
+          {/* STEP 3 */}
+          {step === 3 && (
+            <>
+              <input
+                type="password"
+                placeholder="New password"
+                className="mt-8 w-full rounded-full border border-gray-300
+                           px-5 py-3 text-sm focus:outline-none focus:border-black"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
 
-            {/* STEP 3 */}
-            {step === 3 && (
-              <motion.div
-                key="step3"
-                variants={fadeUp}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
+              <input
+                type="password"
+                placeholder="Confirm password"
+                className="mt-4 w-full rounded-full border border-gray-300
+                           px-5 py-3 text-sm focus:outline-none focus:border-black"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+
+              <button
+                onClick={handleResetPassword}
+                disabled={loading}
+                className="mt-6 w-full rounded-full border border-black
+                           px-6 py-3 text-sm font-medium
+                           hover:bg-black hover:text-white transition"
               >
-                <motion.input
-                  whileFocus={{ scale: 1.01 }}
-                  type="password"
-                  placeholder="Create new password"
-                  className="mt-8 w-full rounded-full border border-gray-300
-                             px-5 py-3 text-sm focus:outline-none focus:border-black"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                />
+                {loading ? <ClipLoader size={18} /> : "Reset password"}
+              </button>
+            </>
+          )}
 
-                <motion.input
-                  whileFocus={{ scale: 1.01 }}
-                  type="password"
-                  placeholder="Confirm new password"
-                  className="mt-4 w-full rounded-full border border-gray-300
-                             px-5 py-3 text-sm focus:outline-none focus:border-black"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleResetPassword}
-                  disabled={loading}
-                  className="mt-6 w-full rounded-full border border-black
-                             px-6 py-3 text-sm font-medium
-                             hover:bg-black hover:text-white transition"
-                >
-                  {loading ? <ClipLoader size={18} /> : "Reset password"}
-                </motion.button>
-              </motion.div>
-            )}
-
-          </AnimatePresence>
-
-          {/* ERROR */}
           {err && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="mt-4 text-sm text-red-500 text-center"
-            >
+            <p className="mt-4 text-sm text-red-500 text-center">
               {err}
-            </motion.p>
+            </p>
           )}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
 
 export default ForgotPassword;
+
 
