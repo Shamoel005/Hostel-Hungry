@@ -1,175 +1,174 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import { FaLocationDot, FaPlus } from "react-icons/fa6";
 import { IoIosSearch } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
-import { RxCross2 } from "react-icons/rx";
-import { TbReceipt2 } from "react-icons/tb";
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { RxCross2 } from "react-icons/rx";
 import axios from 'axios';
 import { serverUrl } from '../App';
 import { setSearchItems, setUserData } from '../redux/userSlice';
+import { TbReceipt2 } from "react-icons/tb";
+import { useNavigate } from 'react-router-dom';
 
 function Nav() {
-    const { userData, currentCity, cartItems } = useSelector(state => state.user);
-    const { myShopData } = useSelector(state => state.owner);
-    const [showInfo, setShowInfo] = useState(false);
-    const [showSearch, setShowSearch] = useState(false);
-    const [query, setQuery] = useState("");
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const { userData, currentCity, cartItems } = useSelector(state => state.user)
+    const { myShopData } = useSelector(state => state.owner)
+    const [showInfo, setShowInfo] = useState(false)
+    const [showSearch, setShowSearch] = useState(false)
+    const [query, setQuery] = useState("")
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const handleLogOut = async () => {
         try {
-            await axios.get(`${serverUrl}/api/auth/signout`, { withCredentials: true });
-            dispatch(setUserData(null));
-            navigate('/'); // Redirect to landing/login after logout
+            await axios.get(`${serverUrl}/api/auth/signout`, { withCredentials: true })
+            dispatch(setUserData(null))
+            navigate("/signin")
         } catch (error) {
-            console.error("Logout failed:", error);
+            console.log(error)
         }
-    };
+    }
 
     const handleSearchItems = async () => {
-        if (!currentCity) return;
         try {
-            const result = await axios.get(`${serverUrl}/api/item/search-items?query=${query}&city=${currentCity}`, { withCredentials: true });
-            dispatch(setSearchItems(result.data));
+            const result = await axios.get(`${serverUrl}/api/item/search-items?query=${query}&city=${currentCity}`, { withCredentials: true })
+            dispatch(setSearchItems(result.data))
         } catch (error) {
-            console.error("Search failed:", error);
+            console.log(error)
         }
-    };
+    }
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            if (query.trim()) {
-                handleSearchItems();
-            } else {
-                dispatch(setSearchItems(null));
-            }
-        }, 400); // Debounce search for stability
-
-        return () => clearTimeout(timer);
-    }, [query]);
-
-    // Deployment Guard: If userData isn't loaded yet, show a minimal bar or null
-    if (!userData) return <div className="h-[80px] bg-[#fff9f6] w-full animate-pulse" />;
+        if (query) {
+            handleSearchItems()
+        } else {
+            dispatch(setSearchItems(null))
+        }
+    }, [query])
 
     return (
-        <nav className='w-full h-[80px] flex items-center justify-between px-6 fixed top-0 z-[9999] bg-[#fff9f6]/95 backdrop-blur-md border-b border-orange-50 shadow-sm'>
+        <div className='w-full h-[80px] flex items-center justify-between px-5 md:px-10 fixed top-0 z-[9999] bg-[#fff9f6]/80 backdrop-blur-md border-b border-orange-50'>
             
-            {/* LOGO */}
-            <div className='flex items-center gap-2 cursor-pointer' onClick={() => navigate(userData.role === 'owner' ? '/owner-dashboard' : '/user-dashboard')}>
-                <h1 className='text-3xl font-black tracking-tighter text-[#ff4d2d] uppercase'>Vingo</h1>
-            </div>
-
-            {/* DESKTOP SEARCH (USER ONLY) */}
-            {userData.role === "user" && (
-                <div className='hidden md:flex items-center bg-white border border-gray-100 shadow-sm rounded-2xl h-[50px] w-full max-w-md overflow-hidden'>
-                    <div className='flex items-center gap-2 px-4 border-r border-gray-100 min-w-[120px]'>
-                        <FaLocationDot className="text-[#ff4d2d]" size={18} />
-                        <span className='text-[10px] font-black uppercase tracking-widest text-gray-400 truncate w-20'>{currentCity || "Select..."}</span>
-                    </div>
-                    <div className='flex items-center flex-1 px-4 gap-2'>
-                        <IoIosSearch size={20} className='text-gray-400' />
+            {/* MOBILE SEARCH OVERLAY */}
+            {showSearch && userData.role === "user" && (
+                <div className='absolute top-[80px] left-0 w-full bg-white p-4 shadow-xl flex items-center gap-3 md:hidden animate-in slide-in-from-top duration-300'>
+                    <div className='flex-1 flex items-center bg-gray-50 px-4 py-2 rounded-2xl gap-2'>
+                        <IoIosSearch size={20} className='text-[#ff4d2d]' />
                         <input 
                             type="text" 
-                            placeholder='Search menu...' 
-                            className='w-full bg-transparent text-sm font-medium outline-none placeholder:text-gray-300'
+                            placeholder='Search Hostel Hungry...' 
+                            className='bg-transparent outline-none text-sm w-full' 
                             onChange={(e) => setQuery(e.target.value)} 
-                            value={query}
+                            value={query} 
+                        />
+                    </div>
+                    <RxCross2 size={24} className='text-gray-400' onClick={() => setShowSearch(false)} />
+                </div>
+            )}
+
+            {/* BRAND LOGO */}
+            <div className='flex items-center gap-2 cursor-pointer' onClick={() => navigate("/home")}>
+                <h1 className='text-xl md:text-2xl font-black text-[#ff4d2d] tracking-tighter uppercase italic'>
+                    Hostel<span className='text-gray-900'>Hungry</span>
+                </h1>
+            </div>
+
+            {/* DESKTOP SEARCH BAR */}
+            {userData.role === "user" && (
+                <div className='hidden md:flex items-center bg-white border border-orange-100 shadow-sm rounded-2xl h-[50px] w-[40%] px-4 gap-3'>
+                    <div className='flex items-center gap-2 border-r border-gray-100 pr-3 max-w-[120px]'>
+                        <FaLocationDot size={16} className="text-[#ff4d2d]" />
+                        <span className='text-[11px] font-bold text-gray-500 uppercase truncate'>{currentCity || "Set Location"}</span>
+                    </div>
+                    <div className='flex items-center flex-1 gap-2'>
+                        <IoIosSearch size={20} className='text-gray-300' />
+                        <input 
+                            type="text" 
+                            placeholder='Search for food...' 
+                            className='outline-none text-sm w-full bg-transparent' 
+                            onChange={(e) => setQuery(e.target.value)} 
+                            value={query} 
                         />
                     </div>
                 </div>
             )}
 
-            {/* ACTIONS */}
-            <div className='flex items-center gap-5'>
-                {/* SEARCH TOGGLE (MOBILE USER) */}
-                {userData.role === "user" && (
-                    <button className='md:hidden p-2 text-[#ff4d2d]' onClick={() => setShowSearch(!showSearch)}>
-                        {showSearch ? <RxCross2 size={24} /> : <IoIosSearch size={24} />}
-                    </button>
+            {/* ACTION ICONS & PROFILE */}
+            <div className='flex items-center gap-3 md:gap-6'>
+                {/* User Search Toggle (Mobile) */}
+                {userData.role === "user" && !showSearch && (
+                    <IoIosSearch size={26} className='text-gray-800 md:hidden' onClick={() => setShowSearch(true)} />
                 )}
 
-                {/* OWNER CONTROLS */}
+                {/* Owner specific actions */}
                 {userData.role === "owner" && (
-                    <div className='flex items-center gap-3'>
+                    <div className='flex items-center gap-2'>
                         {myShopData && (
-                            <button className='flex items-center gap-2 bg-[#ff4d2d] text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-orange-200' onClick={() => navigate("/add-item")}>
-                                <FaPlus size={14} />
-                                <span className='hidden sm:inline'>Add Food</span>
+                            <button className='p-2 md:px-4 md:py-2 rounded-xl bg-[#ff4d2d] text-white flex items-center gap-2 shadow-lg shadow-orange-200 transition-transform active:scale-90' onClick={() => navigate("/add-item")}>
+                                <FaPlus size={18} />
+                                <span className='hidden md:block text-xs font-black uppercase tracking-widest'>Add Item</span>
                             </button>
                         )}
-                        <button className='p-2.5 bg-gray-100 text-gray-600 rounded-xl hover:bg-black hover:text-white transition-all' onClick={() => navigate("/my-orders")}>
+                        <button className='p-2 md:px-4 md:py-2 rounded-xl bg-gray-900 text-white flex items-center gap-2 transition-transform active:scale-90' onClick={() => navigate("/my-orders")}>
                             <TbReceipt2 size={20} />
+                            <span className='hidden md:block text-xs font-black uppercase tracking-widest'>Orders</span>
                         </button>
                     </div>
                 )}
 
-                {/* USER CONTROLS */}
+                {/* User specific actions */}
                 {userData.role === "user" && (
-                    <div className='flex items-center gap-5'>
-                        <button className='relative p-2 text-gray-900 group' onClick={() => navigate("/cart")}>
-                            <FiShoppingCart size={22} />
+                    <>
+                        <div className='relative cursor-pointer group' onClick={() => navigate("/cart")}>
+                            <FiShoppingCart size={24} className='text-gray-800 group-hover:text-[#ff4d2d] transition-colors' />
                             {cartItems?.length > 0 && (
-                                <span className='absolute -top-1 -right-1 bg-[#ff4d2d] text-white text-[9px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#fff9f6]'>
+                                <span className='absolute -top-2 -right-2 bg-[#ff4d2d] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#fff9f6] animate-bounce'>
                                     {cartItems.length}
                                 </span>
                             )}
+                        </div>
+                        <button className='hidden lg:block text-[11px] font-black uppercase tracking-widest text-gray-400 hover:text-gray-900 transition-colors' onClick={() => navigate("/my-orders")}>
+                            My Orders
                         </button>
-                        <button className='hidden md:block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-black' onClick={() => navigate("/my-orders")}>
-                            Orders
-                        </button>
-                    </div>
+                    </>
                 )}
 
-                {/* PROFILE DROPDOWN */}
+                {/* PROFILE AVATAR & DROPDOWN */}
                 <div className='relative'>
-                    <button 
-                        className='w-10 h-10 rounded-2xl bg-black text-white flex items-center justify-center font-black text-sm shadow-xl shadow-black/10 active:scale-90 transition-all'
+                    <div 
+                        className='w-10 h-10 rounded-2xl bg-gray-900 flex items-center justify-center text-white text-sm font-black cursor-pointer shadow-lg active:scale-90 transition-all border-2 border-white'
                         onClick={() => setShowInfo(!showInfo)}
                     >
                         {userData?.fullName?.charAt(0)}
-                    </button>
+                    </div>
 
+                    {/* Fixed Dropdown Position */}
                     {showInfo && (
-                        <div className='absolute right-0 mt-4 w-56 bg-white rounded-3xl shadow-2xl border border-gray-50 p-6 flex flex-col gap-4 animate-in slide-in-from-top-2 duration-300'>
-                            <div>
-                                <p className='text-[10px] font-black uppercase tracking-widest text-gray-300'>Account</p>
-                                <p className='text-sm font-black text-black truncate'>{userData.fullName}</p>
+                        <>
+                            <div className='fixed inset-0 z-[-1]' onClick={() => setShowInfo(false)}></div>
+                            <div className='absolute top-[55px] right-0 w-[200px] bg-white shadow-2xl rounded-[1.5rem] p-4 border border-orange-50 animate-in fade-in zoom-in-95 duration-200'>
+                                <div className='mb-3 pb-3 border-b border-gray-50'>
+                                    <p className='text-[10px] font-black uppercase tracking-widest text-gray-400'>Account</p>
+                                    <p className='text-sm font-bold text-gray-900 truncate'>{userData.fullName}</p>
+                                </div>
+                                <div className='space-y-1'>
+                                    <button className='w-full text-left px-3 py-2 text-xs font-bold text-gray-600 hover:bg-orange-50 hover:text-[#ff4d2d] rounded-xl transition-colors' onClick={() => { navigate("/my-orders"); setShowInfo(false); }}>
+                                        My Orders
+                                    </button>
+                                    <button className='w-full text-left px-3 py-2 text-xs font-black text-[#ff4d2d] hover:bg-red-50 rounded-xl transition-colors mt-2 uppercase tracking-widest' onClick={handleLogOut}>
+                                        Log Out
+                                    </button>
+                                </div>
                             </div>
-                            <hr className='border-gray-50' />
-                            {userData.role === "user" && (
-                                <button className='md:hidden text-left text-xs font-bold text-gray-600' onClick={() => navigate("/my-orders")}>My Orders</button>
-                            )}
-                            <button className='text-left text-xs font-black uppercase text-red-500 tracking-widest' onClick={handleLogOut}>Sign Out</button>
-                        </div>
+                        </>
                     )}
                 </div>
             </div>
-
-            {/* MOBILE SEARCH OVERLAY */}
-            {showSearch && userData.role === "user" && (
-                <div className='absolute top-[80px] left-0 w-full bg-[#fff9f6] p-4 md:hidden border-b border-orange-100 animate-in slide-in-from-top duration-300'>
-                    <div className='flex items-center bg-white rounded-2xl p-3 border border-orange-100 shadow-inner'>
-                        <IoIosSearch size={20} className='text-[#ff4d2d] mr-2' />
-                        <input 
-                            type="text" 
-                            placeholder='Search food...' 
-                            className='w-full bg-transparent outline-none text-sm font-bold'
-                            autoFocus
-                            onChange={(e) => setQuery(e.target.value)} 
-                            value={query}
-                        />
-                    </div>
-                </div>
-            )}
-        </nav>
-    );
+        </div>
+    )
 }
 
-export default Nav;
-
+export default Nav
 
 // import React, { useEffect, useState } from 'react'
 // import { FaLocationDot } from "react-icons/fa6";
