@@ -129,7 +129,7 @@ function SignUp() {
               <input
                 type="email"
                 className="w-full rounded-[20px] bg-[#f5f5f7] border-2 border-transparent px-6 py-4 text-sm font-semibold text-black outline-none transition-all duration-300 focus:bg-white focus:border-black/5 focus:ring-4 focus:ring-black/[0.02]"
-                placeholder="university@email.edu"
+                placeholder="xyz@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
