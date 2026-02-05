@@ -1,86 +1,78 @@
 import axios from 'axios';
-import React from 'react';
-import { LuPencilLine, LuTrash2 } from "react-icons/lu"; // More modern, thinner icons
+import React from 'react'
+import { FaPen, FaTrashAlt } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { serverUrl } from '../App';
 import { useDispatch } from 'react-redux';
 import { setMyShopData } from '../redux/ownerSlice';
 
-function OwnerItemCard({ data }) {
+function OwnerItemCard({data}) {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const handleDelete = async () => {
-        if (!window.confirm("Are you sure you want to remove this item?")) return;
+      // Basic confirmation to prevent accidental deletions
+      if (window.confirm(`Are you sure you want to delete ${data.name}?`)) {
         try {
-            const result = await axios.get(`${serverUrl}/api/item/delete/${data._id}`, { withCredentials: true })
-            dispatch(setMyShopData(result.data))
+          const result = await axios.get(`${serverUrl}/api/item/delete/${data._id}`, { withCredentials: true })
+          dispatch(setMyShopData(result.data))
         } catch (error) {
-            console.error("Delete error:", error);
+          console.error("Error deleting item:", error)
         }
+      }
     }
 
-    return (
-        <div className='flex bg-white rounded-[28px] overflow-hidden border border-gray-100 hover:border-black/5 hover:shadow-2xl hover:shadow-black/5 transition-all duration-300 w-full max-w-2xl group'>
-            {/* --- PRODUCT IMAGE --- */}
-            <div className='w-32 sm:w-44 flex-shrink-0 relative overflow-hidden'>
-                <img 
-                    src={data.image} 
-                    alt={data.name} 
-                    className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
-                />
-                <div className='absolute top-3 left-3'>
-                    <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full backdrop-blur-md ${data.foodType === 'veg' ? 'bg-green-500/80 text-white' : 'bg-red-500/80 text-white'}`}>
-                        {data.foodType}
-                    </span>
-                </div>
+  return (
+    <div className='flex bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 hover:border-orange-200 transition-all w-full max-w-2xl'>
+      {/* IMAGE SECTION */}
+      <div className='w-32 sm:w-40 flex-shrink-0 bg-gray-50'>
+        <img 
+          src={data.image} 
+          alt={data.name} 
+          className='w-full h-full object-cover'
+        />
+      </div>
+
+      {/* CONTENT SECTION */}
+      <div className='flex flex-col justify-between p-4 flex-1'>
+          <div className='space-y-1'>
+            <div className='flex justify-between items-start'>
+                <h2 className='text-lg font-bold text-gray-900 leading-tight'>{data.name}</h2>
+                <div className='text-[#ff4d2d] font-black text-sm'>₹{data.price}</div>
             </div>
-
-            {/* --- DETAILS --- */}
-            <div className='flex flex-col justify-between p-5 flex-1'>
-                <div className='space-y-1'>
-                    <div className='flex justify-between items-start'>
-                        <h2 className='text-lg font-black tracking-tighter text-black uppercase leading-tight'>
-                            {data.name}
-                        </h2>
-                        <span className='text-[10px] font-black tracking-tighter text-black'>
-                            ₹{data.price}
-                        </span>
-                    </div>
-                    <p className='text-[9px] font-black uppercase tracking-[0.2em] text-gray-400'>
-                        {data.category}
-                    </p>
-                </div>
-
-                <div className='flex items-center justify-between mt-4 pt-3 border-t border-gray-50'>
-                    <div className='flex items-center gap-1'>
-                        {/* Status Indicator for Stock - Optional addition */}
-                        <div className='w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse'></div>
-                        <span className='text-[8px] font-black uppercase tracking-widest text-gray-400'>In Stock</span>
-                    </div>
-
-                    <div className='flex items-center gap-2'>
-                        <button 
-                            onClick={() => navigate(`/edit-item/${data._id}`)}
-                            className='p-2.5 bg-[#f5f5f7] hover:bg-black hover:text-white rounded-xl transition-all active:scale-90'
-                        >
-                            <LuPencilLine size={16} />
-                        </button>
-                        <button 
-                            onClick={handleDelete}
-                            className='p-2.5 bg-[#f5f5f7] hover:bg-red-50 text-red-400 hover:text-red-600 rounded-xl transition-all active:scale-90'
-                        >
-                            <LuTrash2 size={16} />
-                        </button>
-                    </div>
-                </div>
+            
+            <div className='flex flex-wrap gap-2 mt-2'>
+                <span className='text-[10px] font-bold uppercase tracking-widest bg-gray-100 text-gray-500 px-2 py-1 rounded-md'>
+                    {data.category}
+                </span>
+                <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-md ${data.foodType === 'veg' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+                    {data.foodType}
+                </span>
             </div>
-        </div>
-    )
+          </div>
+
+          <div className='flex items-center justify-end gap-3 mt-4 pt-3 border-t border-gray-50'>
+            <button 
+                className='p-2.5 cursor-pointer rounded-xl bg-gray-50 text-gray-600 hover:bg-orange-50 hover:text-[#ff4d2d] transition-colors' 
+                onClick={() => navigate(`/edit-item/${data._id}`)}
+                title="Edit Item"
+            >
+                <FaPen size={14}/>
+            </button>
+            <button 
+                className='p-2.5 cursor-pointer rounded-xl bg-gray-50 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors' 
+                onClick={handleDelete}
+                title="Delete Item"
+            >
+                <FaTrashAlt size={14}/>
+            </button>
+          </div>
+      </div>
+    </div>
+  )
 }
 
 export default OwnerItemCard
-
 
 // import axios from 'axios';
 // import React from 'react'
